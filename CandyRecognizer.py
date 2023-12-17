@@ -4,18 +4,26 @@ from matplotlib import pyplot as plt
 
 class CandyRecognizer:
     video_capture = None
+    color_ranges = None
 
     def __init__(self):
         self.video_path = 'videos/video1.mp4'
         self.video_capture = cv2.VideoCapture(self.video_path)
         if not self.video_capture.isOpened():
             raise Exception("Failed to open file")
+        self.color_ranges = {
+            "czerwony": (np.array([0, 100, 100]), np.array([10, 255, 255])),
+            "różowy": (np.array([160, 50, 50]), np.array([180, 255, 255])),
+            "pomarańczowy": (np.array([11, 100, 100]), np.array([25, 255, 255])),
+            "zielony": (np.array([50, 100, 100]), np.array([70, 255, 255]))
+        }
 
     def run_program(self):
         while True:
             try:
                 frame = self.read_frame()
-                cv2.imshow('Frame', frame)
+                # cv2.imshow('Frame', frame)
+                self.detect_candy(frame)
             except Exception as e:
                 print(e)
                 break
@@ -29,43 +37,26 @@ class CandyRecognizer:
             raise Exception("User quit program")
         return frame
 
+    def detect_candy(self, image):
+        hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+
+        masks = {}
+        for color, (lower, upper) in self.color_ranges.items():
+            masks[color] = self.create_color_mask(hsv_image, lower, upper)
+
+        result_image = image.copy()
+
+        candy_counts = {}
+        for color, mask in masks.items():
+            count = self.detect_and_draw_contours(hsv_image, mask, color, result_image)
+            candy_counts[color] = count
+
+        cv2.imshow('Frame', result_image)
 
     def close_program(self):
         self.video_capture.release()
         cv2.destroyAllWindows()
 
-    def try_gpt_mask(self):
-        # Ponowne wczytanie wideo i próba wczytania klatek ze środka nagrania
-        cap = cv2.VideoCapture(self.video_path)
-
-        # Znalezienie długości wideo w klatkach
-        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-
-        # Próba wczytania klatek z około środkowej części wideo
-        middle_frame = total_frames // 2
-        frames = []
-
-        # Ustawienie czytnika wideo na środkową klatkę i wczytanie kilku klatek od tego punktu
-        cap.set(cv2.CAP_PROP_POS_FRAMES, middle_frame - 3)
-        for _ in range(6):
-            ret, frame = cap.read()
-            if ret:
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                frames.append(frame)
-            else:
-                break
-
-        # Zwolnienie uchwytu wideo
-        cap.release()
-
-        # Wyświetlenie wczytanych klatek
-        plt.figure(figsize=(18, 12))
-        for i, frame in enumerate(frames):
-            plt.subplot(2, 3, i + 1)
-            plt.imshow(frame)
-            plt.title(f"Klatka {middle_frame - 3 + i}")
-            plt.axis('off')
-        plt.show()
 
     # Funkcja do wykrywania konturów i rysowania ramki wokół cukierków
     def detect_and_draw_contours(self, image, mask, color_name, output_image):
@@ -141,30 +132,38 @@ class CandyRecognizer:
         for color, (lower, upper) in color_ranges.items():
             masks[color] = self.create_color_mask(frames[0], lower, upper)
 
-        # Wyświetlenie masek dla każdego koloru
-        plt.figure(figsize=(15, 10))
-        for i, (color, mask) in enumerate(masks.items()):
-            plt.subplot(2, 2, i + 1)
-            plt.imshow(mask, cmap='gray')
-            plt.title(f"Maska dla koloru {color}")
-            plt.axis('off')
-        plt.show()
+            # Ponowne otwarcie wideo i przygotowanie do zapisania przetworzonych klatek do nowego pliku
+            cap = cv2.VideoCapture(self.video_path)
 
-        # Stworzenie kopii obrazu do rysowania na nim wyników
-        result_image = frames[0].copy()
+            # Pobranie wymiarów wideo oraz liczby klatek na sekundę
+            frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            fps = cap.get(cv2.CAP_PROP_FPS)
 
-        # Detekcja cukierków dla każdego koloru i rysowanie ramki
-        candy_counts = {}
-        for color, mask in masks.items():
-            count = self.detect_and_draw_contours(frames[0], mask, color, result_image)
-            candy_counts[color] = count
+            # Utworzenie obiektu VideoWriter do zapisu wideo
+            output_path = '/mnt/data/processed_candy_video.mp4'
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Kodek używany do zapisu pliku
+            output_video = cv2.VideoWriter(output_path, fourcc, fps, (frame_width, frame_height))
 
-        # Wyświetlenie obrazu z wynikami
-        plt.figure(figsize=(8, 6))
-        plt.imshow(result_image)
-        plt.title("Detekcja Cukierków")
-        plt.axis('off')
-        plt.show()
+            # Przetwarzanie każdej klatki i zapisywanie do nowego pliku wideo
+            while True:
+                ret, frame = cap.read()
+                if not ret:
+                    break
 
-        # Wyświetlenie liczby cukierków każdego koloru
-        print(candy_counts)
+                # Konwersja kolorów z BGR na RGB
+                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+                # Detekcja cukierków dla każdego koloru i rysowanie ramki
+                for color, mask in masks.items():
+                    # mask = self.create_color_mask(frame_rgb, *color_ranges[color])
+                    self.detect_and_draw_contours(frame_rgb, mask, color, frame_rgb)
+
+                # Konwersja z powrotem na BGR i zapisanie klatki
+                frame_bgr = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
+                output_video.write(frame_bgr)
+
+            # Zwolnienie uchwytów
+            cap.release()
+            output_video.release()
+

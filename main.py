@@ -3,7 +3,7 @@ from CandyRecognizer import CandyRecognizer
 candy_recognizer = CandyRecognizer()
 
 try:
-    candy_recognizer.final_gpt_res()
+    candy_recognizer.run_program()
 except Exception as e:
     print(e)
 finally:
