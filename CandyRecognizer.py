@@ -66,7 +66,7 @@ class CandyRecognizer:
         # Rysowanie ramki wokół każdego konturu i zliczanie cukierków
         count = 0
         for contour in contours:
-            if cv2.contourArea(contour) > 100:  # Filtruj małe kontury, które mogą być szumem
+            if cv2.contourArea(contour) > 200:  # Filtruj małe kontury, które mogą być szumem
                 # Obliczenie prostokąta otaczającego kontur
                 x, y, w, h = cv2.boundingRect(contour)
 
