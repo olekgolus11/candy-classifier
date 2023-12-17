@@ -12,17 +12,16 @@ class CandyRecognizer:
         if not self.video_capture.isOpened():
             raise Exception("Failed to open file")
         self.color_ranges = {
-            "czerwony": (np.array([0, 100, 100]), np.array([10, 255, 255])),
-            "różowy": (np.array([160, 50, 50]), np.array([180, 255, 255])),
+            "czerwony": (np.array([0, 100, 150]), np.array([10, 255, 255])),
+            "różowy": (np.array([150, 50, 50]), np.array([180, 255, 255])),
             "pomarańczowy": (np.array([11, 100, 100]), np.array([25, 255, 255])),
-            "zielony": (np.array([50, 100, 100]), np.array([70, 255, 255]))
+            "zielony": (np.array([40, 100, 100]), np.array([80, 255, 255]))
         }
 
     def run_program(self):
         while True:
             try:
                 frame = self.read_frame()
-                # cv2.imshow('Frame', frame)
                 self.detect_candy(frame)
             except Exception as e:
                 print(e)
@@ -49,24 +48,25 @@ class CandyRecognizer:
         candy_counts = {}
         for color, mask in masks.items():
             count = self.detect_and_draw_contours(hsv_image, mask, color, result_image)
+            cv2.imshow(color, mask)
             candy_counts[color] = count
 
         cv2.imshow('Frame', result_image)
+        print("Ilosc cukierkow: " + str(candy_counts))
 
     def close_program(self):
         self.video_capture.release()
         cv2.destroyAllWindows()
 
 
-    # Funkcja do wykrywania konturów i rysowania ramki wokół cukierków
     def detect_and_draw_contours(self, image, mask, color_name, output_image):
         # Znalezienie konturów na masce
-        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_L1)
 
         # Rysowanie ramki wokół każdego konturu i zliczanie cukierków
         count = 0
         for contour in contours:
-            if cv2.contourArea(contour) > 200:  # Filtruj małe kontury, które mogą być szumem
+            if cv2.contourArea(contour) > 2000:  # Filtruj małe kontury, które mogą być szumem
                 # Obliczenie prostokąta otaczającego kontur
                 x, y, w, h = cv2.boundingRect(contour)
 
@@ -76,13 +76,9 @@ class CandyRecognizer:
                 count += 1
         return count
 
-    # Funkcja do konwersji obrazu do HSV i stworzenia maski koloru
     def create_color_mask(self, image, lower_color, upper_color):
-        # Konwersja obrazu do przestrzeni kolorów HSV
-        hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
-
         # Tworzenie maski dla podanego zakresu kolorów
-        mask = cv2.inRange(hsv_image, lower_color, upper_color)
+        mask = cv2.inRange(image, lower_color, upper_color)
         return mask
 
     def final_gpt_res(self):
