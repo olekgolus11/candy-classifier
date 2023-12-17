@@ -1,6 +1,7 @@
 from CandyRecognizer import CandyRecognizer
 
-candy_recognizer = CandyRecognizer()
+video_path = 'videos/video1.mp4'
+candy_recognizer = CandyRecognizer(video_path)
 
 try:
     candy_recognizer.run_program()

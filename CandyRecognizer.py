@@ -1,87 +1,76 @@
 import cv2
 import numpy as np
+import constants as C
 
 
 class CandyRecognizer:
     video_capture = None
     color_ranges = None
+    width = None
+    height = None
+    middle_x = None
 
     def __init__(self, video_path):
-        self.video_path = video_path
-        self.video_capture = cv2.VideoCapture(self.video_path)
-        self.counter = {"Red": 0, "Pink": 0, "Orange": 0, "Green": 0}
-        self.tracked_candies_y = {"Red": [], "Pink": [], "Orange": [], "Green": []}
+        self.video_capture = cv2.VideoCapture(video_path)
+        self.counter = {C.RED_KEY: 0, C.PINK_KEY: 0, C.ORANGE_KEY: 0, C.GREEN_KEY: 0}
+        self.tracked_candies_y = {C.RED_KEY: [], C.PINK_KEY: [], C.ORANGE_KEY: [], C.GREEN_KEY: []}
         if not self.video_capture.isOpened():
             raise Exception("Failed to open file")
         self.color_ranges = {
-            "Red": (np.array([0, 50, 100]), np.array([10, 200, 255])),
-            "Pink": (np.array([160, 50, 50]), np.array([180, 255, 255])),
-            "Orange": (np.array([11, 100, 100]), np.array([25, 255, 255])),
-            "Green": (np.array([30, 80, 50]), np.array([60, 255, 255]))
+            C.RED_KEY: C.RED_VALUE,
+            C.PINK_KEY: C.PINK_VALUE,
+            C.ORANGE_KEY: C.ORANGE_VALUE,
+            C.GREEN_KEY: C.GREEN_VALUE
         }
 
     def run_program(self):
         while True:
-            ret, frame = self.video_capture.read()
-            if not ret:
-                break  # Exit if no frame is loaded
+            is_frame_loaded, frame = self.video_capture.read()
+            if not is_frame_loaded:
+                break
             hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-            self.find_middle_of_frame(frame)
             result_frame = self.detect_candy(frame, hsv_frame)
-            frame_with_line = self.znajdz_linie_srodka_obrazu(result_frame)
-            self.draw_counter(frame_with_line)
-            cv2.imshow('Detected Candies', frame_with_line)  # Display the result frame
+            frame_with_middle_line = self.append_middle_line(result_frame)
+            self.draw_counter(frame_with_middle_line)
+            cv2.imshow('Detected Candies', frame_with_middle_line)
             if cv2.waitKey(1) & 0xFF == ord('q'):
-                break  # Exit if 'q' is pressed
+                break
         self.close_program()
 
     def draw_counter(self, frame):
-        cv2.putText(frame, "Red: " + str(self.counter["Red"]), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        cv2.putText(frame, "Pink: " + str(self.counter["Pink"]), (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        cv2.putText(frame, "Orange: " + str(self.counter["Orange"]), (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        cv2.putText(frame, "Green: " + str(self.counter["Green"]), (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.putText(frame, f"{C.RED_KEY}: " + str(self.counter[C.RED_KEY]), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, C.INFO_COLOR, C.TEXT_THICKNESS)
+        cv2.putText(frame, f"{C.PINK_KEY}: " + str(self.counter[C.PINK_KEY]), (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, C.INFO_COLOR, C.TEXT_THICKNESS)
+        cv2.putText(frame, f"{C.ORANGE_KEY}: " + str(self.counter[C.ORANGE_KEY]), (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, C.INFO_COLOR, C.TEXT_THICKNESS)
+        cv2.putText(frame, f"{C.GREEN_KEY}: " + str(self.counter[C.GREEN_KEY]), (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, C.INFO_COLOR, C.TEXT_THICKNESS)
 
     def detect_candy(self, original_frame, hsv_image):
         masks = {}
-        candy_counts = {}
-        result_frame = original_frame.copy()  # Copy the original frame to draw on
+        result_frame = original_frame.copy()
         for color, (lower, upper) in self.color_ranges.items():
             masks[color] = self.create_color_mask(hsv_image, lower, upper)
-            count = self.detect_and_draw_contours(result_frame, masks[color], color)
-            if color == "Pink":
-                cv2.imshow(color, masks[color])
-            candy_counts[color] = count
+            self.detect_and_draw_contours(result_frame, masks[color], color)
 
-        # print("Ilość cukierków: " + str(candy_counts))
-        return result_frame  # Return the frame with drawn contours
+        return result_frame
 
     def detect_and_draw_contours(self, output_image, mask, color_name):
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        count = 0
         for contour in contours:
-            if cv2.contourArea(contour) > 30000:  # Adjust the area threshold as needed
-                x, y, w, h = cv2.boundingRect(contour)
+            if cv2.contourArea(contour) > C.MIN_CONTOUR_AREA:  # Adjust the area threshold as needed
+                x, y, width, height = cv2.boundingRect(contour)
                 tracked_candies_y_for_this_color = self.tracked_candies_y[color_name]
                 # map these values to ranges with threshold 10
-                tracked_candies_y_for_this_color_ranges = [range(y - 40, y + 40) for y in tracked_candies_y_for_this_color]
+                tracked_candies_y_for_this_color_ranges = [range(y - C.Y_THRESHOLD, y + C.Y_THRESHOLD) for y in tracked_candies_y_for_this_color]
                 # check if y is in any of the ranges
-                if any(y in tracked_candies_y_for_this_color for y in range(y - 40, y + 40)):
+                if any(y in tracked_candies_y_for_this_color for y in range(y - C.Y_THRESHOLD, y + C.Y_THRESHOLD)):
                     # delete this candy from tracked candies with threshold 10
                     self.tracked_candies_y[color_name] = [y for y in tracked_candies_y_for_this_color if y in tracked_candies_y_for_this_color_ranges]
-
-                    continue
-                elif x >= self.middle_x - 15 and x <= self.middle_x + 15:
+                elif self.middle_x - C.X_THRESHOLD <= x <= self.middle_x + C.X_THRESHOLD:
                     self.tracked_candies_y[color_name].append(y)
-                    print(self.tracked_candies_y[color_name])
-                    print(x)
                     self.counter[color_name] += 1
-                    print(color_name + str(self.counter[color_name]))
-                elif x > self.middle_x + 15:
+                elif x > self.middle_x + C.X_THRESHOLD:
                     self.tracked_candies_y[color_name] = [y for y in tracked_candies_y_for_this_color if y in tracked_candies_y_for_this_color_ranges]
-                cv2.rectangle(output_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                cv2.putText(output_image, color_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (0, 255, 0), 2)
-                count += 1
-        return count
+                cv2.rectangle(output_image, (x, y), (x + width, y + height), C.INFO_COLOR, thickness=C.LINE_THICKNESS)
+                cv2.putText(output_image, color_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 2.5, C.INFO_COLOR, C.TEXT_THICKNESS)
 
     def create_color_mask(self, hsv_image, lower_color, upper_color):
         mask = cv2.inRange(hsv_image, lower_color, upper_color)
@@ -95,26 +84,11 @@ class CandyRecognizer:
         self.height, self.width = frame.shape[:2]
         self.middle_x = self.width // 2
 
-    # Funkcja do wyznaczania linii na środku
-    def znajdz_linie_srodka_obrazu(self, frame):
-        # Konwertuj do skali szarości
+    def append_middle_line(self, frame):
+        self.find_middle_of_frame(frame)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        # Wykonaj progowanie
         _, thresh = cv2.threshold(gray, 240, 255, cv2.THRESH_BINARY)
-
-        # Znajdź kontury
         contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-        # Rysuj linię na środku
-        cv2.line(frame, (self.middle_x, 0), (self.middle_x, self.height), (0, 255, 0), 2)
+        cv2.line(frame, (self.middle_x, 0), (self.middle_x, self.height), C.INFO_COLOR, C.LINE_THICKNESS)
 
         return frame
-
-
-# Path to the video file
-video_path = 'videos/video1.mp4'
-gptRes = CandyRecognizer(video_path)
-
-# Run the candy detection program
-gptRes.run_program()
