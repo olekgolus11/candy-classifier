@@ -52,7 +52,7 @@ class CandyRecognizer:
         for contour in contours:
             if cv2.contourArea(contour) > 30000:  # Adjust the area threshold as needed
                 x, y, w, h = cv2.boundingRect(contour)
-                if x >= self.middle_x - 30 and x <= self.middle_x + 30:
+                if x >= self.middle_x - 15 and x <= self.middle_x + 15:
                     print(x)
                     self.counter[color_name] += 1
                     print(color_name + str(self.counter[color_name]))
