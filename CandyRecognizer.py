@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 import constants as C
 
 
@@ -55,26 +54,46 @@ class CandyRecognizer:
     def detect_and_draw_contours(self, output_image, mask, color_name):
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for contour in contours:
-            if cv2.contourArea(contour) > C.MIN_CONTOUR_AREA:  # Adjust the area threshold as needed
+            if cv2.contourArea(contour) > C.MIN_CONTOUR_AREA:
                 x, y, width, height = cv2.boundingRect(contour)
                 tracked_candies_y_for_this_color = self.tracked_candies_y[color_name]
-                # map these values to ranges with threshold 10
-                tracked_candies_y_for_this_color_ranges = [range(y - C.Y_THRESHOLD, y + C.Y_THRESHOLD) for y in tracked_candies_y_for_this_color]
-                # check if y is in any of the ranges
-                if any(y in tracked_candies_y_for_this_color for y in range(y - C.Y_THRESHOLD, y + C.Y_THRESHOLD)):
-                    # delete this candy from tracked candies with threshold 10
-                    self.tracked_candies_y[color_name] = [y for y in tracked_candies_y_for_this_color if y in tracked_candies_y_for_this_color_ranges]
-                elif self.middle_x - C.X_THRESHOLD <= x <= self.middle_x + C.X_THRESHOLD:
+                tracked_candies_y_for_this_color_ranges = self.convert_to_ranges(tracked_candies_y_for_this_color, C.Y_THRESHOLD)
+
+                if self.is_candy_tracked(color_name, y):
+                    self.untrack_candy(color_name, tracked_candies_y_for_this_color, tracked_candies_y_for_this_color_ranges)
+                elif self.is_candy_in_check_area(x):
                     self.tracked_candies_y[color_name].append(y)
                     self.counter[color_name] += 1
-                elif x > self.middle_x + C.X_THRESHOLD:
-                    self.tracked_candies_y[color_name] = [y for y in tracked_candies_y_for_this_color if y in tracked_candies_y_for_this_color_ranges]
-                cv2.rectangle(output_image, (x, y), (x + width, y + height), C.INFO_COLOR, thickness=C.LINE_THICKNESS)
-                cv2.putText(output_image, color_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 2.5, C.INFO_COLOR, C.TEXT_THICKNESS)
+                elif self.is_candy_after_check_area(x):
+                    self.untrack_candy(color_name, tracked_candies_y_for_this_color,
+                                       tracked_candies_y_for_this_color_ranges)
+
+                self.draw_detected_candy_border(output_image, color_name, x, y, width, height)
+
+    def convert_to_ranges(self, values, threshold):
+        return [range(value - threshold, value + threshold) for value in values]
+
+    def untrack_candy(self, color_name, tracked_candies_y_for_this_color, tracked_candies_y_for_this_color_ranges):
+        self.tracked_candies_y[color_name] = [y for y in tracked_candies_y_for_this_color if y in tracked_candies_y_for_this_color_ranges]
+
+    def is_candy_tracked(self, candy_color, candy_y):
+        tracked_candies_y_for_this_color = self.tracked_candies_y[candy_color]
+        return any(y in tracked_candies_y_for_this_color for y in range(candy_y - C.Y_THRESHOLD, candy_y + C.Y_THRESHOLD))
+
+    def is_candy_in_check_area(self, current_x):
+        return self.middle_x - C.X_THRESHOLD <= current_x <= self.middle_x + C.X_THRESHOLD
+
+    def is_candy_after_check_area(self, current_x):
+        return current_x > self.middle_x + C.X_THRESHOLD
 
     def create_color_mask(self, hsv_image, lower_color, upper_color):
         mask = cv2.inRange(hsv_image, lower_color, upper_color)
         return mask
+
+    def draw_detected_candy_border(self, output_image, color_name, x, y, width, height):
+        cv2.rectangle(output_image, (x, y), (x + width, y + height), C.INFO_COLOR, thickness=C.LINE_THICKNESS)
+        cv2.putText(output_image, color_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 2.5, C.INFO_COLOR,
+                    C.TEXT_THICKNESS)
 
     def close_program(self):
         self.video_capture.release()
