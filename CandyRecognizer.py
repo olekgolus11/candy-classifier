@@ -10,6 +10,7 @@ class CandyRecognizer:
         self.video_path = video_path
         self.video_capture = cv2.VideoCapture(self.video_path)
         self.counter = {"Red": 0, "Pink": 0, "Orange": 0, "Green": 0}
+        self.tracked_candies_y = {"Red": [], "Pink": [], "Orange": [], "Green": []}
         if not self.video_capture.isOpened():
             raise Exception("Failed to open file")
         self.color_ranges = {
@@ -60,7 +61,16 @@ class CandyRecognizer:
         for contour in contours:
             if cv2.contourArea(contour) > 30000:  # Adjust the area threshold as needed
                 x, y, w, h = cv2.boundingRect(contour)
-                if x >= self.middle_x - 14 and x <= self.middle_x + 14:
+                tracked_candies_y_for_this_color = self.tracked_candies_y[color_name]
+                # map these values to ranges with threshold 10
+                tracked_candies_y_for_this_color_ranges = [range(y - 10, y + 10) for y in tracked_candies_y_for_this_color]
+                # check if y is in any of the ranges
+                if any(y in tracked_candies_y_for_this_color_ranges for y in range(y - 10, y + 10)):
+                    # delete this candy from tracked candies with threshold 10
+                    self.tracked_candies_y[color_name] = [y for y in tracked_candies_y_for_this_color if y not in tracked_candies_y_for_this_color_ranges]
+
+                    continue
+                elif x >= self.middle_x - 15 and x <= self.middle_x + 15:
                     print(x)
                     self.counter[color_name] += 1
                     print(color_name + str(self.counter[color_name]))
