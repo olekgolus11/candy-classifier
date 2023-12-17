@@ -11,10 +11,10 @@ class CandyRecognizer:
         if not self.video_capture.isOpened():
             raise Exception("Failed to open file")
         self.color_ranges = {
-            "czerwony": (np.array([0, 50, 100]), np.array([10, 200, 255])),
-            "różowy": (np.array([160, 50, 50]), np.array([180, 255, 255])),
-            "pomarańczowy": (np.array([11, 100, 100]), np.array([25, 255, 255])),
-            "zielony":  (np.array([30, 80, 50]), np.array([60, 255, 255]))
+            "Red": (np.array([0, 50, 100]), np.array([10, 200, 255])),
+            "Pink": (np.array([160, 50, 50]), np.array([180, 255, 255])),
+            "Orange": (np.array([11, 100, 100]), np.array([25, 255, 255])),
+            "Green":  (np.array([30, 80, 50]), np.array([60, 255, 255]))
         }
 
     def run_program(self):
@@ -36,7 +36,7 @@ class CandyRecognizer:
         for color, (lower, upper) in self.color_ranges.items():
             masks[color] = self.create_color_mask(hsv_image, lower, upper)
             count = self.detect_and_draw_contours(result_frame, masks[color], color)
-            if color == "różowy":
+            if color == "Pink":
                 cv2.imshow(color, masks[color])
             candy_counts[color] = count
 
@@ -50,7 +50,7 @@ class CandyRecognizer:
             if cv2.contourArea(contour) > 30000:  # Adjust the area threshold as needed
                 x, y, w, h = cv2.boundingRect(contour)
                 cv2.rectangle(output_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                cv2.putText(output_image, color_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                cv2.putText(output_image, color_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (0, 255, 0), 2)
                 count += 1
         return count
 
