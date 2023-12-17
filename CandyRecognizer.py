@@ -1,6 +1,10 @@
+from ctypes import util
+
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
+from Colors import Colors as CLR
+import util
 
 class CandyRecognizer:
     video_capture = None
@@ -12,10 +16,10 @@ class CandyRecognizer:
         if not self.video_capture.isOpened():
             raise Exception("Failed to open file")
         self.color_ranges = {
-            "czerwony": (np.array([0, 120, 70]), np.array([70, 255, 255])),
-            "różowy": (np.array([150, 50, 50]), np.array([180, 255, 255])),
-            "pomarańczowy": (np.array([11, 100, 100]), np.array([25, 255, 255])),
-            "zielony": (np.array([40, 100, 100]), np.array([80, 255, 255]))
+            "czerwony": (util.get_limits(CLR.RED.value)),
+            "różowy": (util.get_limits(CLR.PINK.value)),
+            "pomarańczowy": (util.get_limits(CLR.ORANGE.value)),
+            "zielony": (util.get_limits(CLR.GREEN.value))
         }
 
     def run_program(self):
