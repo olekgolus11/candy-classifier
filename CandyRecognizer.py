@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 class CandyRecognizer:
     video_capture = None
     color_ranges = None
@@ -15,7 +16,7 @@ class CandyRecognizer:
             "Red": (np.array([0, 50, 100]), np.array([10, 200, 255])),
             "Pink": (np.array([160, 50, 50]), np.array([180, 255, 255])),
             "Orange": (np.array([11, 100, 100]), np.array([25, 255, 255])),
-            "Green":  (np.array([30, 80, 50]), np.array([60, 255, 255]))
+            "Green": (np.array([30, 80, 50]), np.array([60, 255, 255]))
         }
 
     def run_program(self):
@@ -27,10 +28,17 @@ class CandyRecognizer:
             self.find_middle_of_frame(frame)
             result_frame = self.detect_candy(frame, hsv_frame)
             frame_with_line = self.znajdz_linie_srodka_obrazu(result_frame)
+            self.draw_counter(frame_with_line)
             cv2.imshow('Detected Candies', frame_with_line)  # Display the result frame
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break  # Exit if 'q' is pressed
         self.close_program()
+
+    def draw_counter(self, frame):
+        cv2.putText(frame, "Red: " + str(self.counter["Red"]), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.putText(frame, "Pink: " + str(self.counter["Pink"]), (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.putText(frame, "Orange: " + str(self.counter["Orange"]), (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.putText(frame, "Green: " + str(self.counter["Green"]), (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
     def detect_candy(self, original_frame, hsv_image):
         masks = {}
@@ -52,7 +60,7 @@ class CandyRecognizer:
         for contour in contours:
             if cv2.contourArea(contour) > 30000:  # Adjust the area threshold as needed
                 x, y, w, h = cv2.boundingRect(contour)
-                if x >= self.middle_x - 15 and x <= self.middle_x + 15:
+                if x >= self.middle_x - 14 and x <= self.middle_x + 14:
                     print(x)
                     self.counter[color_name] += 1
                     print(color_name + str(self.counter[color_name]))
@@ -73,7 +81,6 @@ class CandyRecognizer:
         self.height, self.width = frame.shape[:2]
         self.middle_x = self.width // 2
 
-
     # Funkcja do wyznaczania linii na środku
     def znajdz_linie_srodka_obrazu(self, frame):
         # Konwertuj do skali szarości
@@ -89,6 +96,7 @@ class CandyRecognizer:
         cv2.line(frame, (self.middle_x, 0), (self.middle_x, self.height), (0, 255, 0), 2)
 
         return frame
+
 
 # Path to the video file
 video_path = 'videos/video1.mp4'
