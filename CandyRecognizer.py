@@ -1,79 +1,70 @@
-from ctypes import util
-
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
-from Colors import Colors as CLR
-import util
 
 class CandyRecognizer:
     video_capture = None
     color_ranges = None
 
-    def __init__(self):
-        self.video_path = 'videos/video1.mp4'
+    def __init__(self, video_path):
+        self.video_path = video_path
         self.video_capture = cv2.VideoCapture(self.video_path)
         if not self.video_capture.isOpened():
             raise Exception("Failed to open file")
         self.color_ranges = {
-            "czerwony": (util.get_limits(CLR.RED.value, CLR.RED.name)),
-            "różowy": (util.get_limits(CLR.PINK.value, CLR.PINK.name)),
-            "pomarańczowy": (util.get_limits(CLR.ORANGE.value, CLR.ORANGE.name)),
-            "zielony": (util.get_limits(CLR.GREEN.value, CLR.GREEN.name))
+            "czerwony": (np.array([0, 50, 100]), np.array([10, 200, 255])),
+            "różowy": (np.array([160, 50, 50]), np.array([180, 255, 255])),
+            "pomarańczowy": (np.array([11, 100, 100]), np.array([25, 255, 255])),
+            "zielony":  (np.array([30, 80, 50]), np.array([60, 255, 255]))
         }
 
     def run_program(self):
         while True:
-            try:
-                frame = self.read_frame()
-                self.detect_candy(frame)
-            except Exception as e:
-                print(e)
-                break
+            ret, frame = self.video_capture.read()
+            if not ret:
+                break  # Exit if no frame is loaded
+            hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+            result_frame = self.detect_candy(frame, hsv_frame)
+            cv2.imshow('Detected Candies', result_frame)  # Display the result frame
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break  # Exit if 'q' is pressed
         self.close_program()
 
-    def read_frame(self):
-        is_frame_loaded, frame = self.video_capture.read()
-        if not is_frame_loaded:
-            raise Exception("No frame loaded")
-        if cv2.waitKey(20) & 0xFF == ord('q'):
-            raise Exception("User quit program")
-        return frame
-
-    def detect_candy(self, image):
+    def detect_candy(self, original_frame, hsv_image):
         masks = {}
-        for color, (lower, upper) in self.color_ranges.items():
-            masks[color] = self.create_color_mask(image, lower, upper)
-
-        result_image = image.copy()
-
         candy_counts = {}
-        for color, mask in masks.items():
-            count = self.detect_and_draw_contours(image, mask, color, result_image)
-            cv2.imshow(color, mask)
+        result_frame = original_frame.copy()  # Copy the original frame to draw on
+        for color, (lower, upper) in self.color_ranges.items():
+            masks[color] = self.create_color_mask(hsv_image, lower, upper)
+            count = self.detect_and_draw_contours(result_frame, masks[color], color)
+            if color == "różowy":
+                cv2.imshow(color, masks[color])
             candy_counts[color] = count
 
-        cv2.imshow('Frame', result_image)
-        print("Ilosc cukierkow: " + str(candy_counts))
+        print("Ilość cukierków: " + str(candy_counts))
+        return result_frame  # Return the frame with drawn contours
 
-    def close_program(self):
-        self.video_capture.release()
-        cv2.destroyAllWindows()
-
-
-    def detect_and_draw_contours(self, image, mask, color_name, output_image):
+    def detect_and_draw_contours(self, output_image, mask, color_name):
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
         count = 0
         for contour in contours:
-            if cv2.contourArea(contour) > 4000:  # Filtruj małe kontury, które mogą być szumem
+            if cv2.contourArea(contour) > 30000:  # Adjust the area threshold as needed
                 x, y, w, h = cv2.boundingRect(contour)
                 cv2.rectangle(output_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 cv2.putText(output_image, color_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                 count += 1
         return count
 
-    def create_color_mask(self, image, lower_color, upper_color):
-        # Tworzenie maski dla podanego zakresu kolorów
-        mask = cv2.inRange(image, lower_color, upper_color)
+    def create_color_mask(self, hsv_image, lower_color, upper_color):
+        mask = cv2.inRange(hsv_image, lower_color, upper_color)
         return mask
+
+    def close_program(self):
+        self.video_capture.release()
+        cv2.destroyAllWindows()
+
+# Path to the video file
+video_path = 'videos/video1.mp4'
+gptRes = CandyRecognizer(video_path)
+
+# Run the candy detection program
+gptRes.run_program()
