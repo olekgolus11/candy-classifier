@@ -63,17 +63,21 @@ class CandyRecognizer:
                 x, y, w, h = cv2.boundingRect(contour)
                 tracked_candies_y_for_this_color = self.tracked_candies_y[color_name]
                 # map these values to ranges with threshold 10
-                tracked_candies_y_for_this_color_ranges = [range(y - 10, y + 10) for y in tracked_candies_y_for_this_color]
+                tracked_candies_y_for_this_color_ranges = [range(y - 40, y + 40) for y in tracked_candies_y_for_this_color]
                 # check if y is in any of the ranges
-                if any(y in tracked_candies_y_for_this_color_ranges for y in range(y - 10, y + 10)):
+                if any(y in tracked_candies_y_for_this_color for y in range(y - 40, y + 40)):
                     # delete this candy from tracked candies with threshold 10
-                    self.tracked_candies_y[color_name] = [y for y in tracked_candies_y_for_this_color if y not in tracked_candies_y_for_this_color_ranges]
+                    self.tracked_candies_y[color_name] = [y for y in tracked_candies_y_for_this_color if y in tracked_candies_y_for_this_color_ranges]
 
                     continue
                 elif x >= self.middle_x - 15 and x <= self.middle_x + 15:
+                    self.tracked_candies_y[color_name].append(y)
+                    print(self.tracked_candies_y[color_name])
                     print(x)
                     self.counter[color_name] += 1
                     print(color_name + str(self.counter[color_name]))
+                elif x > self.middle_x + 15:
+                    self.tracked_candies_y[color_name] = [y for y in tracked_candies_y_for_this_color if y in tracked_candies_y_for_this_color_ranges]
                 cv2.rectangle(output_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 cv2.putText(output_image, color_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (0, 255, 0), 2)
                 count += 1
