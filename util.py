@@ -11,7 +11,7 @@ def get_limits(color, colorName):
         lowerLimitBGR = np.array([160, 50, 50])
         upperLimitBGR = np.array([180, 255, 255])
     elif(colorName == CLR.ORANGE.name):
-        
+
         lowerLimitBGR = np.array([60, 70, 100])
         upperLimitBGR = np.array([0, 150, 255])
     else:

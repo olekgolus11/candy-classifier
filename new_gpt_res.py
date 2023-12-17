@@ -11,10 +11,9 @@ class NewNewGptRes:
         if not self.video_capture.isOpened():
             raise Exception("Failed to open file")
         self.color_ranges = {
-            "czerwony": (np.array([0, 100, 100]), np.array([10, 255, 255])),
+            "czerwony": (np.array([0, 50, 100]), np.array([10, 200, 255])),
             "różowy": (np.array([160, 50, 50]), np.array([180, 255, 255])),
             "pomarańczowy": (np.array([11, 100, 100]), np.array([25, 255, 255])),
-            ##apply green range for 55, 185, 255
             "zielony":  (np.array([30, 80, 50]), np.array([60, 255, 255]))
         }
 
@@ -37,7 +36,8 @@ class NewNewGptRes:
         for color, (lower, upper) in self.color_ranges.items():
             masks[color] = self.create_color_mask(hsv_image, lower, upper)
             count = self.detect_and_draw_contours(result_frame, masks[color], color)
-            cv2.imshow(color, masks[color])
+            if color == "czerwony":
+                cv2.imshow(color, masks[color])
             candy_counts[color] = count
 
         print("Ilość cukierków: " + str(candy_counts))
