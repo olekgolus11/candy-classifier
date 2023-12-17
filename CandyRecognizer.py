@@ -62,17 +62,12 @@ class CandyRecognizer:
 
 
     def detect_and_draw_contours(self, image, mask, color_name, output_image):
-        # Znalezienie konturów na masce
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        # Rysowanie ramki wokół każdego konturu i zliczanie cukierków
         count = 0
         for contour in contours:
             if cv2.contourArea(contour) > 4000:  # Filtruj małe kontury, które mogą być szumem
-                # Obliczenie prostokąta otaczającego kontur
                 x, y, w, h = cv2.boundingRect(contour)
-
-                # Rysowanie prostokąta na obrazie wyjściowym
                 cv2.rectangle(output_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 cv2.putText(output_image, color_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                 count += 1
