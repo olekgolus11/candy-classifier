@@ -12,7 +12,7 @@ class CandyRecognizer:
         if not self.video_capture.isOpened():
             raise Exception("Failed to open file")
         self.color_ranges = {
-            "czerwony": (np.array([0, 100, 150]), np.array([10, 255, 255])),
+            "czerwony": (np.array([0, 120, 70]), np.array([70, 255, 255])),
             "różowy": (np.array([150, 50, 50]), np.array([180, 255, 255])),
             "pomarańczowy": (np.array([11, 100, 100]), np.array([25, 255, 255])),
             "zielony": (np.array([40, 100, 100]), np.array([80, 255, 255]))
@@ -37,7 +37,7 @@ class CandyRecognizer:
         return frame
 
     def detect_candy(self, image):
-        hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+        hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         masks = {}
         for color, (lower, upper) in self.color_ranges.items():
