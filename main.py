@@ -1,4 +1,11 @@
-import numpy as np
+from CandyRecognizer import CandyRecognizer
 
-print(np.add(1, 1))
+candy_recognizer = CandyRecognizer()
+
+try:
+    candy_recognizer.run_program()
+except Exception as e:
+    print(e)
+finally:
+    candy_recognizer.close_program()
 
