@@ -29,9 +29,22 @@ Praca przedstawia metodę klasyfikacji cukierków na podstawie ich opakowania. W
 Tematem projektu jest klasyfikacja cukierków na podstawie koloru ich opakowania. W tym celu został stworzony układ pomiarowy z taśmy produkcyjnej, kamery oraz zestawu konkretnych, prostokątnych, cukierków o kolorowych opakowaniach. Następnie została stworzona metoda rozróżniająca opakowania cukierków na podstawie ich koloru oraz zliczająca wystąpienia tych opakowań na podstawie ich koloru.
 
 \section{Wstęp}
-Detekcja obiektów przy użyciu OpenCV i Pythona jest bardzo powszechnie wykorzystywaną metodą. Nie ciężko jest znaleźć wiele przykładów na jej wykorzystanie w różnych dziedzinach. Przed podjęciem impelentacji staraliśmy się zrozumieć ten przykład \cite{yt-banana}, który pozwolił nam zobrazować podejście do problemu. Gdy już zrozumieliśmy działanie, zaczęliśmy szukać przykładów implementacji (np. \cite{gfg}, \cite{dry}). Do samego zliczania obiektów wykorzystaliśmy ten przykład \cite{yt-motorcycle}.
+Detekcja obiektów przy użyciu OpenCV i Pythona jest bardzo powszechnie wykorzystywaną metodą. Nie ciężko jest znaleźć wiele przykładów na jej wykorzystanie w różnych dziedzinach. Przykładowo -
 
 \section{Materiały i metody}
+\subsection{Materiały pomiarowe}
+Materiałami pomiarowymi są konkretne cukierki o kolorowych opakowaniach, to znaczy - cukierki marki Mamba oraz Turbo. Wykorzystywane cukierki dzielimy na 4 kolory, z czego różowy, czerwony oraz pomarańczowy to cukierki marki Mamba, natomiast zielony - marki Turbo. Rozmiar cukierka ma co prawda bezpośredni wpływ na to, czy jest on zakwalikifowany przez program czy nie, jednakże jego wymiary nie są jedyną rzeczą braną pod uwagę - o czym więcej w sekcji \ref{Metoda pomiarowa}.
+
+\subsection{Układ pomiarowy}
+
+Układ pomiarowy składa się z ciemnozielonej taśmy produkcyjnej napędzanej silnikiem elektrycznym o stałej prędkości, kamery o rozdzielczości 1080p oraz lampy LED naświetlającej taśmę z góry.
+Taśma produkcyjna charakteryzuje się szerokością 10cm oraz stałą prędkością 3m/s. Oświetlona została lampą ledową o mocy 10W i temperaturze 3500K, co skutkuje klarownym oświetleniem bez zaburzenia kolorów cukierków.
+Kamera została ustawiona 20cm nad taśmą, rejestrując przy tym całą szerokość taśmy.
+Układ pomiarowy został przedstawiony na rysunku \ref{fig:uklad_pomiarowy}.
+
+\includegraphics[width=5cm]{mamba.png}
+\includegraphics[width=5cm]{gumaturbo.png}
+
 
 \section{Wyniki i dyskusja}
 
