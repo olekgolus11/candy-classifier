@@ -14,6 +14,8 @@
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{lipsum}
 \usepackage{multicol}
+\usepackage{tikz,tcolorbox}
+\usepackage{float}
 
 \title{Metoda klasyfikacji cukierków na podstawie ich opakowania}
 \author{Aleksander Golus, Bartosz Chadryś, Jakub Miśko, Igor Joński}
@@ -22,51 +24,97 @@
 \maketitle
 
 \begin{abstract}
-Praca przedstawia metodę klasyfikacji cukierków na podstawie ich opakowania. W pierwszej części opisany został temat projektu. Następnie, we wstępie opisane zostały wcześniejsze podejścia do problemu wraz z rozwiązaniami i celami. W trzeciej sekcji opisany został schemat układu pomiarowego, wraz z wykorzystanymi przedmiotami oraz szczegółowy opis zastosowania metody. Następnie opisane zostały wyniki pomiarów oraz ich analiza. Na podstawie wyników pomiarów w kolejnym rozdziale zostały rozpisane wnioski z przeprowadzonych pomiarów. Na samym końcu znajduje się bibliografia.
+Praca przedstawia metodę klasyfikacji cukierków na podstawie ich opakowania. W tym celu został stworzony układ pomiarowy z taśmy produkcyjnej, kamery oraz zestawu konkretnych cukierków o kolorowych opakowaniach. Następnie została stworzona metoda rozróżniająca i zliczająca opakowania cukierków na podstawie ich koloru.
 \end{abstract}
 
 \section{Temat projektu}
 \label{Temat projektu}
+\definecolor{my-red-light}{RGB}{254, 218, 212}
+\definecolor{my-red-dark}{RGB}{220, 97, 85}
+\definecolor{my-orange-light}{RGB}{252, 236, 189}
+\definecolor{my-orange-dark}{RGB}{247, 167, 9}
+\definecolor{my-pink-light}{RGB}{252, 218, 229}
+\definecolor{my-pink-dark}{RGB}{247, 132, 168}
+\definecolor{my-green}{RGB}{141, 189, 16}
+
+
 Tematem projektu jest klasyfikacja cukierków na podstawie koloru ich opakowania. W tym celu został stworzony układ pomiarowy z taśmy produkcyjnej, kamery oraz zestawu konkretnych, prostokątnych, cukierków o kolorowych opakowaniach. Następnie została stworzona metoda rozróżniająca opakowania cukierków na podstawie ich koloru oraz zliczająca wystąpienia tych opakowań na podstawie ich koloru.
 
 \section{Wstęp}
 \label{Wstęp}
-Detekcja obiektów przy użyciu OpenCV i Pythona jest bardzo powszechnie wykorzystywaną metodą. Nie ciężko jest znaleźć wiele przykładów na jej wykorzystanie w różnych dziedzinach.
+W projekcie opracowano metodę, która pozwala na rozpoznawanie kolorowych opakowań cukierków oraz zliczanie ich wystąpień na linii produkcyjnej. Podstawą metody jest analiza obrazu, w której kluczową rolę odgrywa detekcja kolorów i określenie obszaru zajmowanego przez obiekt. Następnie, korzystając z zaprogramowanych algorytmów, system klasyfikuje cukierki na podstawie barwy opakowań i agreguje dane dotyczące ich ilości.
 
-Jednym z podobnych rozwiązań z tej branży(spożywczej) jest rozpoznawanie rodzajów bułek oraz ich kształtów tak jak zostało to przedstawione w \cite{virtuslab}.
+Metoda ta znajduje zastosowanie w przemyśle spożywczym, zwłaszcza w automatyzacji procesów pakowania oraz kontroli jakości. Umożliwia ona nie tylko szybką selekcję produktów, ale także może przyczynić się do usprawnienia procesów magazynowania i dystrybucji.
 
-Opracowana metoda polega na rozpoznawaniu obiektów w tym przypadku cukierków oraz ich zliczanie na podstawie koloru ich opakowania oraz podanego minimalnego pola powierzchni zajmowanej przez cukierek.
-
-Bazując na artykułach oraz informacjach znalezionych w sieci można stwierdzić, że przedstawiona metoda w danej branży jest innowatorska ze względu na podejście do sposobu rozpoznania.
+Jednym z podobnych rozwiązań z tej branży (spożywczej) jest rozpoznawanie rodzajów bułek oraz ich kształtów tak jak zostało to przedstawione w \cite{virtuslab}, w przypadku tematu, jakim są cukierki, można znaleźć zastosowania w pomocy rozróżniania rodzaju cukierka w bombonierce \cite{chocolates}. Innym przypadkiem użycia detekcji obiektów na podstawie ich opakowania może być również przedstawiona tutaj \cite{vending} innowacyjna metoda rozpoznawania produktów w automatach sprzedających.
 
 \section{Materiały i metody}
 \label{Materiały i metody}
-\subsection{Materiały pomiarowe}
+\subsection{Materiały badawcze}
 \label{Materiały pomiarowe}
-Materiałami pomiarowymi są konkretne cukierki o kolorowych opakowaniach, to znaczy - cukierki marki Mamba oraz Turbo. Wykorzystywane cukierki dzielimy na 4 kolory, z czego różowy, czerwony oraz pomarańczowy to cukierki marki Mamba, natomiast zielony - marki Turbo. Rozmiar cukierka ma co prawda bezpośredni wpływ na to, czy jest on zakwalikifowany przez program czy nie, jednakże jego wymiary nie są jedyną rzeczą braną pod uwagę - o czym więcej w sekcji \ref{Metoda pomiarowa}.
+Materiałami pomiarowymi są konkretne rodzaje cukierków o kolorowych opakowaniach, to znaczy - cukierki marki Mamba oraz Turbo. Zostały one wybrane ze względu na to, że posiadają bardzo podobny rozmiar, co zdecydowanie ułatwiło implementację metody.
 
-\begin{center}
-\includegraphics[width=5cm]{mamba.png}
-\includegraphics[width=5cm]{gumaturbo.png}
-\end{center}
+Wykorzystywane cukierki dzielimy na 4 typy kolorów, z czego różowy, czerwony oraz pomarańczowy to cukierki marki Mamba, natomiast zielony - marki Turbo. Cukierki marki Mamba posiadają dwie barwy danego koloru - barwę jaśniejszą oraz ciemniejszą.
+
+\begin{figure}[H]
+    \centering
+    \begin{tcolorbox}[colback=white]
+
+    \begin{multicols}{4}
+    Różowy cukierek
+    \begin{tcolorbox}[colback=my-pink-dark, width=\linewidth, colframe=my-pink-dark]
+    \end{tcolorbox}
+    Czerwony cukierek
+    \begin{tcolorbox}[colback=my-red-dark, width=\linewidth, colframe=my-red-dark]
+    \end{tcolorbox}
+    Pomarańczowy cuk.
+    \begin{tcolorbox}[colback=my-orange-dark, width=\linewidth, colframe=my-orange-dark]
+    \end{tcolorbox}
+    Zielony cukierek
+    \begin{tcolorbox}[colback=my-green, width=\linewidth, colframe=my-green]
+    \end{tcolorbox}
+    \end{multicols}
+
+    \begin{multicols}{4}
+    \begin{tcolorbox}[colback=my-pink-light, width=\linewidth, colframe=my-pink-light]
+    \end{tcolorbox}
+    \begin{tcolorbox}[colback=my-red-light, width=\linewidth, colframe=my-red-light]
+    \end{tcolorbox}
+    \begin{tcolorbox}[colback=my-orange-light, width=\linewidth, colframe=my-orange-light]
+    \end{tcolorbox}
+    \end{multicols}
+
+    \end{tcolorbox}
+    \caption{Wizualizacja barw dla każdego koloru badanego cukierka}
+\end{figure}
+
+
+
+
+
+
+\subsection{Przedziały kolorów rozpoznawalnych cukierków}
 
 Kolory cukierków w odpowiednim oświetleniu (omówionym w sekcji \ref{Układ pomiarowy}) powinny zawierać się w następujących zakresach:
 
-\begin{center}
-\begin{tabular}{ |c|c|c|c| }
- \hline
- Kolor & Dolna granica & Górna granica \\
- \hline
- Różowy & \#32282f & \#ff0000 \\
- \hline
- Czerwony & \#645050 & \#ff7a37 \\
- \hline
- Pomarańczowy & \#644b3d & \#ffd500 \\
- \hline
- Zielony & \#323222 & \#00ff00 \\
- \hline
-\end{tabular}
-\end{center}
+\begin{table}[H]
+    \label{tab:my_label}
+    \centering
+    \begin{tabular}{ |c|c|c|c| }
+     \hline
+     Kolor & Dolna granica & Górna granica \\
+     \hline
+     Różowy & \#32282f & \#ff0000 \\
+     \hline
+     Czerwony & \#645050 & \#ff7a37 \\
+     \hline
+     Pomarańczowy & \#644b3d & \#ffd500 \\
+     \hline
+     Zielony & \#323222 & \#00ff00 \\
+     \hline
+    \end{tabular}
+    \caption{Przedziały barw, w których musi znaleźć się kolor opakowania cukierka by został zidentyfikowany.}
+\end{table}
 
 Wtedy cukierki są rozpoznawane przez program jako cukierki, a nie jako tło.
 
@@ -415,6 +463,12 @@ Rozwiązanie to możne znaleźć zastosowanie w branży spożywczej do zliczania
 
 \bibitem{yt-banana}
 \url{https://www.youtube.com/watch?v=aFNDh5k3SjU&t=1004s/}
+
+\bibitem{chocolates}
+\url{https://blog.roboflow.com/identifying-chocolates-with-computer-vision/}
+
+\bibitem{vending}
+ \url{https://www.researchgate.net/publication/337068624_Towards_Identification_of_Packaged_Products_via_Computer_Vision_Convolutional_Neural_Networks_for_Object_Detection_and_Image_Classification_in_Retail_Environments}
 
 \end{thebibliography}
 
