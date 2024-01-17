@@ -23,12 +23,6 @@
 \begin{document}
 \maketitle
 
-\begin{abstract}
-Praca przedstawia metodę klasyfikacji cukierków na podstawie ich opakowania. W tym celu został stworzony układ pomiarowy z taśmy produkcyjnej, kamery oraz zestawu konkretnych cukierków o kolorowych opakowaniach. Następnie została stworzona metoda rozróżniająca i zliczająca opakowania cukierków na podstawie ich koloru.
-\end{abstract}
-
-\section{Temat projektu}
-\label{Temat projektu}
 \definecolor{my-red-light}{RGB}{254, 218, 212}
 \definecolor{my-red-dark}{RGB}{220, 97, 85}
 \definecolor{my-orange-light}{RGB}{252, 236, 189}
@@ -37,24 +31,19 @@ Praca przedstawia metodę klasyfikacji cukierków na podstawie ich opakowania. W
 \definecolor{my-pink-dark}{RGB}{247, 132, 168}
 \definecolor{my-green}{RGB}{141, 189, 16}
 
-
-Tematem projektu jest klasyfikacja cukierków na podstawie koloru ich opakowania. W tym celu został stworzony układ pomiarowy z taśmy produkcyjnej, kamery oraz zestawu konkretnych, prostokątnych, cukierków o kolorowych opakowaniach. Następnie została stworzona metoda rozróżniająca opakowania cukierków na podstawie ich koloru oraz zliczająca wystąpienia tych opakowań na podstawie ich koloru.
-
 \section{Wstęp}
 \label{Wstęp}
-W projekcie opracowano metodę, która pozwala na rozpoznawanie kolorowych opakowań cukierków oraz zliczanie ich wystąpień na linii produkcyjnej. Podstawą metody jest analiza obrazu, w której kluczową rolę odgrywa detekcja kolorów i określenie obszaru zajmowanego przez obiekt. Następnie, korzystając z zaprogramowanych algorytmów, system klasyfikuje cukierki na podstawie barwy opakowań i agreguje dane dotyczące ich ilości.
-
-Metoda ta znajduje zastosowanie w przemyśle spożywczym, zwłaszcza w automatyzacji procesów pakowania oraz kontroli jakości. Umożliwia ona nie tylko szybką selekcję produktów, ale także może przyczynić się do usprawnienia procesów magazynowania i dystrybucji.
+W projekcie opracowano metodę, która pozwala na rozpoznawanie kolorowych opakowań cukierków oraz monitorowanie ich ilości na taśmie produkcyjnej. Metoda ta może znaleźć zastosowanie w przemyśle spożywczym w automatyzacji procesów pakowania oraz kontroli jakości. Zapewnia ona selekcję produktów oraz może przyczynić się do usprawnienia procesów magazynowania i dystrybucji.
 
 Jednym z podobnych rozwiązań z tej branży (spożywczej) jest rozpoznawanie rodzajów bułek oraz ich kształtów tak jak zostało to przedstawione w \cite{virtuslab}, w przypadku tematu, jakim są cukierki, można znaleźć zastosowania w pomocy rozróżniania rodzaju cukierka w bombonierce \cite{chocolates}. Innym przypadkiem użycia detekcji obiektów na podstawie ich opakowania może być również przedstawiona tutaj \cite{vending} innowacyjna metoda rozpoznawania produktów w automatach sprzedających.
 
 \section{Materiały i metody}
 \label{Materiały i metody}
 \subsection{Materiały badawcze}
-\label{Materiały pomiarowe}
-Materiałami pomiarowymi są konkretne rodzaje cukierków o kolorowych opakowaniach, to znaczy - cukierki marki Mamba oraz Turbo. Zostały one wybrane ze względu na to, że posiadają bardzo podobny rozmiar, co zdecydowanie ułatwiło implementację metody.
+\label{Materiały badawcze}
+Materiałami badawczymi są konkretne rodzaje cukierków o kolorowych opakowaniach, to znaczy - cukierki marki Mamba oraz Turbo. Zostały one wybrane ze względu na to, że posiadają bardzo podobny rozmiar.
 
-Wykorzystywane cukierki dzielimy na 4 typy kolorów, z czego różowy, czerwony oraz pomarańczowy to cukierki marki Mamba, natomiast zielony - marki Turbo. Cukierki marki Mamba posiadają dwie barwy danego koloru - barwę jaśniejszą oraz ciemniejszą.
+Wykorzystane cukierki dzielimy na 4 typy kolorów, z czego różowy, czerwony oraz pomarańczowy to cukierki marki Mamba, natomiast zielony - marki Turbo. Cukierki marki Mamba posiadają dwie barwy danego koloru - barwę jaśniejszą oraz ciemniejszą.
 
 \begin{figure}[H]
     \centering
@@ -95,10 +84,10 @@ Wykorzystywane cukierki dzielimy na 4 typy kolorów, z czego różowy, czerwony 
 
 \subsection{Przedziały kolorów rozpoznawalnych cukierków}
 
-Kolory cukierków w odpowiednim oświetleniu (omówionym w sekcji \ref{Układ pomiarowy}) powinny zawierać się w następujących zakresach:
+Kolory cukierków w określonym oświetleniu, omówionym w sekcji \ref{Układ pomiarowy}, powinny zawierać się w następujących zakresach:
 
 \begin{table}[H]
-    \label{tab:my_label}
+    \label{tab:tab1}
     \centering
     \begin{tabular}{ |c|c|c|c| }
      \hline
@@ -116,212 +105,53 @@ Kolory cukierków w odpowiednim oświetleniu (omówionym w sekcji \ref{Układ po
     \caption{Przedziały barw, w których musi znaleźć się kolor opakowania cukierka by został zidentyfikowany.}
 \end{table}
 
-Wtedy cukierki są rozpoznawane przez program jako cukierki, a nie jako tło.
-
 \subsection{Układ pomiarowy}
 \label{Układ pomiarowy}
 
-Układ pomiarowy składa się z ciemnozielonej taśmy produkcyjnej napędzanej silnikiem elektrycznym o stałej prędkości, kamery o rozdzielczości 1080p oraz lampy LED naświetlającej taśmę z góry.
-Taśma produkcyjna charakteryzuje się szerokością 10cm oraz stałą prędkością 3cm/s. Oświetlona została lampą ledową o mocy 10W i temperaturze 3500K, co skutkuje klarownym oświetleniem bez zaburzenia kolorów cukierków.
-Kamera została ustawiona 20cm nad taśmą, rejestrując przy tym całą szerokość taśmy.
-Układ pomiarowy został przedstawiony na rysunku \ref{fig:uklad_pomiarowy}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{ukladPomiarowy.png}
+    \caption{Układ pomiarowy}
+    \label{fig:ukladPomiarowy}
+\end{figure}
+
+Układ pomiarowy, przedstawiony na rysunku \ref{fig:ukladPomiarowy}, składa się z ciemnozielonej taśmy produkcyjnej napędzanej silnikiem elektrycznym o stałej prędkości, kamery o rozdzielczości 1080p oraz lampy LED naświetlającej taśmę z góry. Ciemnozielony kolor taśmy został wybrany tak, aby nie zawierał się w przedziałach barw cukierków podanych w \ref{tab:tab1}.
+
+Taśma produkcyjna ma szerokość 6cm, która przesuwa umieszczone na niej cukierki ze stałą prędkością 3cm/s. Do oświetlenia cukierków znajdujących się na taśmie została użyta lampa ledowa o mocy 10W i temperaturze 3500K, umieszczona na wysokości 20cm, oddalona od kamery o 15cm w płaszczyźnie poziomej. Kamera została ustawiona 20cm nad taśmą, rejestrując przy tym całą szerokość taśmy.
 
 \subsection{Metoda pomiarowa}
 \label{Metoda pomiarowa}
 \subsubsection{Idea}
 \label{Idea}
 
-Ideą metody pomiarowej jest zliczanie cukierków występujących na taśmie produkcyjnej bazując na kolorze opakowania cukierka. Przypadki użycia metody pomiarowej to między innymi:
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=8cm]{diagram_idei.png}
+    \caption{Diagram idei metody pomiarowej}
+    \label{fig:diagramIdei}
+\end{figure}
+
+Ideą metody pomiarowej, przedstawionej na diagramie \ref{fig:diagramIdei}, jest zliczanie cukierków umieszczonych na taśmie produkcyjnej bazując na kolorze opakowania cukierka. Przypadki użycia metody pomiarowej to między innymi:
 
 \begin{itemize}
-    \item Weryfikacja serii cukierków - czy ilość wyprodukowanych cukierków jest zgodna z ilością cukierków bezpośrednio przed
-    \item Weryfikacja serii cukierków - czy ilość cukierków na taśmie jest wystarczająco różnorodna
+    \item Weryfikacja ilości cukierków w partii - czy ilość zliczonych cukierków jest zgodna z ustaloną ilością w danej partii.
+    \item Weryfikacja różnorodności cukierków - czy zliczone cukierki na taśmie są wystarczająco zróżnicowane.
 \end{itemize}
 
 \subsubsection{Sposób pomiaru}
 \label{Sposób pomiaru}
 
-Metoda pomiarowa wymaga odpowiedniego umieszczenia kamery nad taśmą produkcyjną (patrz sekcja \ref{Układ pomiarowy}) wraz z odpowiednim oświetleniem. Oprócz tego, metoda wymaga użycia odpowniednich cukierków (patrz sekcja \ref{Materiały pomiarowe}). Cukierek, oprócz odpowiedniego koloru musi również spełniać wymagania dotyczące jego wymiarów, to jest - jego pole powierzchni musi być większe niż 30000 pikseli, w przeciwnym wypadku cukierek zostanie uznany za tło.
-
-\subsection{Wykorzystane narzędzia}
-\label{Wykorzystane narzędzia}
-
-\subsubsection{OpenCV-python (cv2)}
-\label{OpenCV-python (cv2)}
-
-Wykorzystane metody:
-\begin{enumerate}
-\item VideoCapture() \cite{opencv1}
-
-Metoda pozwala na otworzenie pliku wideo, obrazu lub uchwycenia obrazu wideo poprzez przesyłanie z innego urządzenia
-
-Użyte parametry:
-\begin{itemize}
-\item const String \&filename - nazwa pliku
-\end{itemize}
-
-\item isOpened() \cite{opencv2}
-
-Metoda używana w celu sprawdzenia czy dany plik wideo lub obraz jest otworzony. Zwraca true, jeśli plik został poprawnie otworzony.
-
-\item read() \cite{opencv3}
-
-Metoda pobiera, dekoduje, a następnie zwraca następną klatkę wideo w postaci dwóch zmiennych retval oraz image.
-
-Opis zwróconych zmiennych:
-\begin{itemize}
-\item retval - zmienna typu boolean opisująca czy poprawnie udało się odczytać klatkę wideo
-\item image - odczytany obraz w postaci tablicy numpy
-\end{itemize}
-
-\item cvtColor() \cite{opencv4}
-
-Metoda służy do zmiany przestrzeni barw dla danego obrazu np. z HSV na RGB
-
-Użyte parametry:
-\begin{itemize}
-
-\item src - obraz w postaci tablicy numpy, dla którego zmieniamy przestrzeń barw
-\item code - kod z biblioteki cv2 opisujący zmianę przestrzeni barw np. COLOR\_BGR2HSV, czyli zmiana z barw BGR na HSV
-
-\end{itemize}
-
-\item imshow() \cite{opencv5}
-
-Metoda pozwala na wyświetlenie obrazu w oddzielnym oknie programu. Okno automatycznie dostosowywuje się do rozmiaru obrazu.
-
-Użyte parametry:
-\begin{itemize}
-\item window\_name - parametr typu string opisujący nazwę okna
-\item image - obraz w postaci tablicy numpy, który zostanie wyświetlony
-\end{itemize}
-
-\item waitKey() \cite{opencv6}
-
-Metoda pozwala użytkownikowi na wyświetlenie okna przez dany czas, lub dopóki nie wciśnie danego przycisku. Przyjmuje ona czas w milisekundach, jeśli zostanie przekazane 0, to czeka dopóki dowolny przycisk zostanie wciśnięty
-
-Użyte parametry:
-\begin{itemize}
-\item delay - parametr opisujący czas w milisekundach
-\end{itemize}
-
-\item putText() \cite{opencv7}
-
-Funkcja używana w celu wyświetlenia tekstu na danym obrazie.
-
-Użyte parametry:
-
-\begin{itemize}
-\item image - obraz w postaci tablicy numpy na którym zostanie wyświetlony tekst
-\item text - dany text typu string który zostanie wyświetlony na obrazie
-\item org - parametr typu tuple przechowujący koordynaty w postaci (x, y)
-\item font - nazwa fontu z biblioteki cv2 np. FONT\_HERSHEY\_SIMPLEX
-\item fontScale - parametr opisujący skalę fontu
-\item color - kolor tekstu typu string np. „Red”
-\item thickness - grubość tekstu
-\end{itemize}
-
-\item findContours() \cite{opencv8}
-
-Metoda pomaga w wydobyciu konturu z obrazu. Najlepiej działa na obrazach binarnych, więc najlepiej zacząć od technik progowania.
-
-Użyte parametry:
-
-\begin{itemize}
-\item image - obraz w postaci tablicy numpy dla którego szukamy konturów
-\item mode - tryby z biblioteki cv2. Użyliśmy RETR\_EXTERNAL  do wydobycia tylko zewnętrznych konturów oraz CHAIN\_APPROX\_SIMPLE do usuwania zbędnych punktów i kompresowania konturów.
-\end{itemize}
-
-\item contourArea() \cite{opencv9}
-
-Funkcja zwracająca pole dla danego konturu przekazanego w parametrze.
-
-Użyte parametry:
-
-\begin{itemize}
-\item contour - dany kontur dla którego chcemy uzyskać pole
-\end{itemize}
-
-\item boundingRect \cite{opencv10}
-
-Funkcja oblicza i zwraca punkty x,y oraz szerokość i wysokość dla danego obrazu
-
-Użyte parametry:
-
-\begin{itemize}
-\item array - obraz w postaci tablicy numpy
-\end{itemize}
-
-\item inRange() \cite{opencv11}
-
-Metoda zwracająca przekształconą maskę obrazu dla danego przedziału kolorów na przekazanym obrazie.
-
-Użyte parametry:
-
-\begin{itemize}
-\item src - obraz w postaci tablicy numpy
-\item lowerb - dolny przedział kolorów od którego chcemy uzyskać maskę
-\item upperb - górny przedział kolorów do którego chcemy uzyskać maskę
-\end{itemize}
-
-\item rectangle() \cite{opencv12}
-
-Funkcja wyświetlająca prostokąt na przekazanym obrazie.
-
-Użyte parametry:
-
-\begin{itemize}
-\item image - obraz w postaci tablicy numpy na którym ma zostać namalowany prostokąt
-\item start\_point - punkt w postaci tupli (x, y) gdzie ma się zacząć prostokąt
-\item end\_point - punkt w postaci tupli (x, y) gdzie ma się zakończyć prostokąt
-\item color - kolor typu string np. „Blue”
-\item thickness - grubość prostokąta typu float
-\end{itemize}
-
-\item release() \cite{opencv13}
-
-Metoda zamyka plik wideo lub przerywa nagrywanie z danego urządzenia.
-
-\item destroyAllWindows() \cite{opencv14}
-
-Funkcja zamyka wszystkie otwarte okna
-
-\item threshold() \cite{opencv15}
-
-Metoda służy do progowania przekazanego obrazu w parametrze
-
-Użyte parametry:
-
-\begin{itemize}
-\item source - obraz w postaci tablicy numpy (musi być w szarości) na którym wykonane zostanie progowanie
-\item thresh - wartość progu poniżej i powyżej, przy której wartości pikseli zostaną odpowiednio zmienione
-\item maxval - maksymalna wartość, która może zostać przypisana do piksela
-\item type - metoda którą zostanie wykonane progowanie np. THRESH\_BINARY
-\end{itemize}
-
-\item line() \cite{opencv16}
-
-Funkcja służy do narysowania linii na przekazanym obrazie
-
-Użyte parametry:
-
-\begin{itemize}
-\item img - przekazany obraz jako tablica numpy na którym ma zostać wyświetlona linia
-\item pt1 - początkowy punkt z którego ma być narysowana linia w postaci tupli (x, y)
-\item pt2 - końcowy punkt, gdzie linia powinna się zakończyć w postaci tupli (x, y)
-\item color - kolor w postaci string np. „Green”
-\item thickness - grubość linii typu float
-\end{itemize}
-
-\end{enumerate}
+Metoda została przedstawiona na diagramie \ref{}
 
 \section{Wyniki i dyskusja}
 \label{Wyniki i dyskusja}
-Efektywność działania metody została przetestowana na dwóch wcześniej przygotowanych nagraniach taśmy produkcyjnej ze znajdującymi się na niej cukierkami.
-\subsection{Nagranie 1}
+Efektywność działania metody została przetestowana na dwóch wcześniej przygotowanych nagraniach taśmy produkcyjnej z umieszczonymi na niej cukierkami z których wyodrębniono przypadki.
+\subsection{Przypadek 1}
 Analizując rezultaty otrzymaliśmy następujące wyniki:
 
-\begin{center}
+\begin{table}
+\centering
+\label{tab:video1}
 \begin{tabular}{|p{0.15\linewidth}|p{0.25\linewidth}|p{0.25\linewidth}|p{0.25\linewidth}|}
  \hline
  Kolor opakowania & Rzeczywista ilość cukierków & Ilość cukierków rozpoznana przez metodę & Procent rozpoznanych cukierków \\
@@ -335,11 +165,19 @@ Analizując rezultaty otrzymaliśmy następujące wyniki:
  Zielony & 7 & 7 & 100\% \\
  \hline
 \end{tabular}
-\end{center}
+\caption{Wyniki dla pierwszego przypadku}
+\end{table}
 
 \begin{center}
 \includegraphics[width=\linewidth]{wykres1.png}
 \end{center}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{wykres1.png}
+    \caption{Wykres rezultatów z pierwszego nagrania}
+    \label{fig:ukladPomiarowy}
+\end{figure}
 
 Jak widać, nasza metoda dla nagrania 1. (który jest zgodny z wyżej wyjaśnioną konfiguracją stanowiska pomiarowego) daje wyniki 100-tu procentowej zgodności między rzeczywistą ilością cukierków, a tą rozpoznaną przez program, dla danego koloru opakowania cukierka.
 
@@ -372,7 +210,7 @@ Nagranie to pokazuje poprawne działanie metody, nawet w sytuacji, gdy na linii 
 \includegraphics[width=\linewidth]{wykres2.png}
 \end{center}
 
-Nagranie 2. nie posiada żadnych cukierków z zielonym kolorem opakowania, więc zostały wyłączone z dyskusji na tym przykładzie.
+Nagranie 2. nie posiada żadnych cukierków o zielonym kolorze opakowania, więc zostały wyłączone z dyskusji na tym przykładzie.
 
 Na tym nagraniu nasz program nie osiągnął 100\% w żadnym z obserwowanych kolorów. Niedokładność ta w każdym przypadku była spowodowana przez ten sam przypadek. Ponieważ nasza metoda klasyfikuje cukierek tylko na podstawie jego koloru, program ma problem z rozpoznaniem dwóch cukierków tego samego koloru znajdujących się bezpośrednio obok siebie (stykających się ze sobą). Na nagraniu 1. przypadek ten nie wystąpił, stąd otrzymaliśmy początkowo idealną dokładność.
 
