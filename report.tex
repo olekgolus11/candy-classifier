@@ -141,15 +141,28 @@ Ideą metody pomiarowej, przedstawionej na diagramie \ref{fig:diagramIdei}, jest
 \subsubsection{Sposób pomiaru}
 \label{Sposób pomiaru}
 
-Metoda została przedstawiona na diagramie \ref{}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Diagram_metody.png}
+    \caption{Układ pomiarowy}
+    \label{fig:diagramMetody}
+\end{figure}
+
+Metoda, przedstawiona na diagramie \ref{fig:diagramMetody}, by zidentyfikować i zliczyć typ danego cukierka, musi:
+\begin{enumerate}
+    \item Sprawdzić, czy pole powierzchni identyfikowanego cukierka jest większe niż minimalne założone pole
+    \item Sprawdzić, czy kolor opakowania zawiera się w jednym z określonych w założeniach przedziałach
+    \item Sprawdzić, czy ruch cukierka w płaszczyźnie w poprzek ruchu taśmy się nie zmienił
+\end{enumerate}
+Jeśli kolejno wszystkie wymagania zostały spełnione, ilość rozpoznanego rodzaju cukierka jest zwiększona.
 
 \section{Wyniki i dyskusja}
 \label{Wyniki i dyskusja}
-Efektywność działania metody została przetestowana na dwóch wcześniej przygotowanych nagraniach taśmy produkcyjnej z umieszczonymi na niej cukierkami z których wyodrębniono przypadki.
+Efektywność działania metody została przetestowana na wcześniej przygotowanych nagraniach taśmy produkcyjnej z umieszczonymi na niej cukierkami z których wyodrębniono przypadki.
 \subsection{Przypadek 1}
 Analizując rezultaty otrzymaliśmy następujące wyniki:
 
-\begin{table}
+\begin{table}[H]
 \centering
 \label{tab:video1}
 \begin{tabular}{|p{0.15\linewidth}|p{0.25\linewidth}|p{0.25\linewidth}|p{0.25\linewidth}|}
