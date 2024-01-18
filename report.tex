@@ -150,155 +150,63 @@ Ideą metody pomiarowej, przedstawionej na diagramie \ref{fig:diagramIdei}, jest
 
 Metoda, przedstawiona na diagramie \ref{fig:diagramMetody}, by zidentyfikować i zliczyć typ danego cukierka, musi:
 \begin{enumerate}
-    \item Sprawdzić, czy pole powierzchni identyfikowanego cukierka jest większe niż minimalne założone pole
-    \item Sprawdzić, czy kolor opakowania zawiera się w jednym z określonych w założeniach przedziałach
-    \item Sprawdzić, czy ruch cukierka w płaszczyźnie w poprzek ruchu taśmy się nie zmienił
+    \item Sprawdzić, czy pole powierzchni identyfikowanego cukierka jest większe niż minimalne założone pole. Wykorzystana została funkcja \verb|detect_candy|, która przyjmuje klatkę nagrania.
+    \item Sprawdzić, czy kolor opakowania zawiera się w jednym z określonych w założeniach przedziałach wykorzystując funkcję \verb|create_color_mask|, która przyjmuje klatkę obrazu i wykorzystuje zadeklarowane przedziały kolorów typów cukierków.
+    \item Sprawdzić, czy ruch cukierka w płaszczyźnie w poprzek ruchu taśmy się nie zmienił wykorzystując funkcję \verb|is_candy_tracked|.
 \end{enumerate}
 Jeśli kolejno wszystkie wymagania zostały spełnione, ilość rozpoznanego rodzaju cukierka jest zwiększona.
 
 \section{Wyniki i dyskusja}
 \label{Wyniki i dyskusja}
-Efektywność działania metody została przetestowana na wcześniej przygotowanych nagraniach taśmy produkcyjnej z umieszczonymi na niej cukierkami z których wyodrębniono przypadki.
+Skuteczność działania metody została przetestowana na wcześniej przygotowanych nagraniach taśmy produkcyjnej z umieszczonymi na niej cukierkami z których wyodrębniono przypadki.
 \subsection{Przypadek 1}
 Analizując rezultaty otrzymaliśmy następujące wyniki:
-
-\begin{table}[H]
-\centering
-\label{tab:video1}
-\begin{tabular}{|p{0.15\linewidth}|p{0.25\linewidth}|p{0.25\linewidth}|p{0.25\linewidth}|}
- \hline
- Kolor opakowania & Rzeczywista ilość cukierków & Ilość cukierków rozpoznana przez metodę & Procent rozpoznanych cukierków \\
- \hline
- Czerwony & 4 & 4 & 100\% \\
- \hline
- Różowy & 6 & 6 & 100\% \\
- \hline
- Pomarańczowy & 8 & 8 & 100\% \\
- \hline
- Zielony & 7 & 7 & 100\% \\
- \hline
-\end{tabular}
-\caption{Wyniki dla pierwszego przypadku}
-\end{table}
-
-\begin{center}
-\includegraphics[width=\linewidth]{wykres1.png}
-\end{center}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{wykres1.png}
-    \caption{Wykres rezultatów z pierwszego nagrania}
-    \label{fig:ukladPomiarowy}
+    \caption{Wykres rezultatów dla pierwszego przypadku}
+    \label{fig:przypadek1}
 \end{figure}
 
-Jak widać, nasza metoda dla nagrania 1. (który jest zgodny z wyżej wyjaśnioną konfiguracją stanowiska pomiarowego) daje wyniki 100-tu procentowej zgodności między rzeczywistą ilością cukierków, a tą rozpoznaną przez program, dla danego koloru opakowania cukierka.
 
-Nagranie to pokazuje poprawne działanie metody, nawet w sytuacji, gdy na linii zliczającej kolor cukierka znajdują się jednocześnie dwa cukierki, jeden pod drugim.
+Metoda w przypadku 1. daje wyniki 100-tu procentowej zgodności między rzeczywistą ilością cukierków, a tą rozpoznaną przez program, dla danego koloru opakowania cukierka. Metoda poprawnie identyfikuje typy cukierków również w sytuacji, gdy dwa cukierki innych typów znajdują się jeden pod drugim.
 
 \begin{center}
 \includegraphics[width=6cm]{badanie.png}
 \end{center}
 
-\subsection{Nagranie 2}
+\subsection{Przypadek 2}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{wykres2.png}
+    \caption{Wykres rezultatów dla drugiego przypadku}
+    \label{fig:przypadek2}
+\end{figure}
 
 
-\begin{center}
-\begin{tabular}{|p{0.15\linewidth}|p{0.25\linewidth}|p{0.25\linewidth}|p{0.25\linewidth}|}
- \hline
- Kolor opakowania & Rzeczywista ilość cukierków & Ilość cukierków rozpoznana przez metodę & Procent rozpoznanych cukierków \\
- \hline
- Czerwony & 7 & 6 & 85\% \\
- \hline
- Różowy & 8 & 7 & 87\% \\
- \hline
- Pomarańczowy & 8 & 7 & 87\% \\
- \hline
- Zielony & - & - & -\% \\
- \hline
-\end{tabular}
-\end{center}
+W przypadku 2. analizowane były wyłącznie cukierki marki Mamba.
+
+
+W tym przypadku metoda nie osiągnęła 100\% w żadnym z obserwowanych kolorów. Niedokładność ta wynikała z tego samego powodu. Metoda klasyfikując typ cukierka ma problem z rozpoznaniem dwóch cukierków tego samego koloru opakowania znajdujących się bezpośrednio obok siebie (stykających się ze sobą). Problem ten w przypadku 1. nie wystąpił, stąd otrzymaliśmy początkowo idealną dokładność.
 
 \begin{center}
-\includegraphics[width=\linewidth]{wykres2.png}
+\includegraphics[height=5cm]{pink.png}
+\includegraphics[height=5cm]{orange.png}
+\includegraphics[height=5cm]{red.png}
 \end{center}
-
-Nagranie 2. nie posiada żadnych cukierków o zielonym kolorze opakowania, więc zostały wyłączone z dyskusji na tym przykładzie.
-
-Na tym nagraniu nasz program nie osiągnął 100\% w żadnym z obserwowanych kolorów. Niedokładność ta w każdym przypadku była spowodowana przez ten sam przypadek. Ponieważ nasza metoda klasyfikuje cukierek tylko na podstawie jego koloru, program ma problem z rozpoznaniem dwóch cukierków tego samego koloru znajdujących się bezpośrednio obok siebie (stykających się ze sobą). Na nagraniu 1. przypadek ten nie wystąpił, stąd otrzymaliśmy początkowo idealną dokładność.
-
-\begin{center}
-\includegraphics[width=0.3\linewidth]{pink.png}
-\includegraphics[width=0.3\linewidth]{orange.png}
-\includegraphics[width=0.3\linewidth]{red.png}
-\end{center}
-
-\subsection{Skuteczność metody na podstawie obu nagrań}
-
-Łącznie na obu nagraniach wystąpiło 48 cukierków, z czego poprawnie rozpoznano 45 z nich. Daje nam to średnią dokładność 94\%. Aby otrzymać jak najlepsze wyniki warto zadbać o różnorodność kolorów opakowań cukierkó na taśmie znajdujących się bezpośrednio nad czytnikiem w danej chwili.
 
 \section{Wnioski}
 \label{Wnioski}
 
-Metoda została zaprojektowana w celu zliczania ilości cukierków na podstawie koloru ich opakowań na nagraniu. Uzyskane wyniki były zgodne z założeniami projektu. Skuteczność rozpoznawania cukierków po opakowaniach wynosiła 94\%, a precyzja wahała się w granicach +/- 2 cukierki.
+Uzyskane wyniki były zgodne z założeniami projektu. Skuteczność metody, na podstawie omówionych przypadków, wyniosła średnio 94\%.
 
-Analiza dokładności rozwiązania wykazała, że system skutecznie identyfikuje cukierki o różnych kolorach dla określonego rozmiaru minimalnego.
-
-Podczas działania programu zostaje wykorzystywane około 200MB pamięci RAM. Jednakże większe zużycie zasobów wystąpiło na procesorze 30\% - 45\% mocy obliczeniowej. Nie wpłynęło to w żaden sposób na pracę komputera ani programu, nie wystąpiły spowolnienia systemu, a program działał bez żadnych spowolnień ani błędów.
-
-Rozwiązanie to możne znaleźć zastosowanie w branży spożywczej do zliczania ilości cukierków.
+Rozwiązanie to może znaleźć zastosowanie w branży spożywczej zarówno do zliczania ilości cukierków, jak i do weryfikacji p
 
 \section{Literatura}
 \label{Literatura}
 \begin{thebibliography}{9}
-
-\bibitem{opencv1}
-\url{https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html#a949d90b766ba42a6a93fe23a67785951}
-
-\bibitem{opencv2}
-\url{https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html#a9d2ca36789e7fcfe7a7be3b328038585}
-
-\bibitem{opencv3}
-\url{https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html#a473055e77dd7faa4d26d686226b292c1}
-
-\bibitem{opencv4}
-\url{https://docs.opencv.org/3.4/d8/d01/group__imgproc__color__conversions.html#ga397ae87e1288a81d2363b61574eb8cab}
-
-\bibitem{opencv5}
-\url{https://docs.opencv.org/3.4/d7/dfc/group__highgui.html#ga453d42fe4cb60e5723281a89973ee563}
-
-\bibitem{opencv6}
-\url{https://docs.opencv.org/3.4/d7/dfc/group__highgui.html#ga5628525ad33f52eab17feebcfba38bd7}
-
-\bibitem{opencv7}
-\url{https://docs.opencv.org/3.4/d6/d6e/group__imgproc__draw.html#ga5126f47f883d730f633d74f07456c576}
-
-\bibitem{opencv8}
-\url{https://docs.opencv.org/3.4/d3/dc0/group__imgproc__shape.html#ga17ed9f5d79ae97bd4c7cf18403e1689a}
-
-\bibitem{opencv9}
-\url{https://docs.opencv.org/3.4/d3/dc0/group__imgproc__shape.html#ga2c759ed9f497d4a618048a2f56dc97f1}
-
-\bibitem{opencv10}
-\url{https://docs.opencv.org/3.4/d3/dc0/group__imgproc__shape.html#ga103fcbda2f540f3ef1c042d6a9b35ac7}
-
-\bibitem{opencv11}
-\url{https://docs.opencv.org/3.4/d2/de8/group__core__array.html#ga48af0ab51e36436c5d04340e036ce981}
-
-\bibitem{opencv12}
-\url{https://docs.opencv.org/3.4/d6/d6e/group__imgproc__draw.html#ga07d2f74cadcf8e305e810ce8eed13bc9}
-
-\bibitem{opencv13}
-\url{https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html#afb4ab689e553ba2c8f0fec41b9344ae6}
-
-\bibitem{opencv14}
-\url{https://docs.opencv.org/3.4/d7/dfc/group__highgui.html#ga6b7fc1c1a8960438156912027b38f481}
-
-\bibitem{opencv15}
-\url{https://docs.opencv.org/3.4/d7/d1b/group__imgproc__misc.html#gae8a4a146d1ca78c626a53577199e9c57}
-
-\bibitem{opencv16}
-\url{https://docs.opencv.org/3.4/d6/d6e/group__imgproc__draw.html#ga7078a9fae8c7e7d13d24dac2520ae4a2}
 
 \bibitem{virtuslab}
 \url{https://virtuslab.com/case-study/object-detection-in-real-time-streaming-recordings-and-images}
