@@ -126,7 +126,7 @@ Taśma produkcyjna ma szerokość 6cm, która przesuwa umieszczone na niej cukie
 
 \begin{figure}[H]
     \centering
-    \includegraphics[height=8cm]{diagram_idei.png}
+    \includegraphics[height=8cm]{diagramIdei.png}
     \caption{Diagram idei metody pomiarowej}
     \label{fig:diagramIdei}
 \end{figure}
@@ -143,16 +143,16 @@ Ideą metody pomiarowej, przedstawionej na diagramie \ref{fig:diagramIdei}, jest
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{Diagram_metody.png}
+    \includegraphics[height=8cm]{diagramMetody.png}
     \caption{Układ pomiarowy}
     \label{fig:diagramMetody}
 \end{figure}
 
-Metoda, przedstawiona na diagramie \ref{fig:diagramMetody}, by zidentyfikować i zliczyć typ danego cukierka, musi:
+Metoda, przedstawiona na diagramie \ref{fig:diagramMetody}, by zidentyfikować i zliczyć typ danego cukierka, musi spełnić następujące wymagania:
 \begin{enumerate}
-    \item Sprawdzić, czy pole powierzchni identyfikowanego cukierka jest większe niż minimalne założone pole. Wykorzystana została funkcja \verb|detect_candy|, która przyjmuje klatkę nagrania.
-    \item Sprawdzić, czy kolor opakowania zawiera się w jednym z określonych w założeniach przedziałach wykorzystując funkcję \verb|create_color_mask|, która przyjmuje klatkę obrazu i wykorzystuje zadeklarowane przedziały kolorów typów cukierków.
-    \item Sprawdzić, czy ruch cukierka w płaszczyźnie w poprzek ruchu taśmy się nie zmienił wykorzystując funkcję \verb|is_candy_tracked|.
+    \item Pole powierzchni identyfikowanego cukierka jest większe niż minimalne założone pole. Wykorzystana została funkcja \verb|is_area_in_range|, która używa pojedynczej klatki nagrania.
+    \item Kolor opakowania zawiera się w określonych w \ref{tab:tab1} przedziałach. Użyta została funkcja \verb|create_color_mask|, która przyjmuje klatkę obrazu i zwraca maskę, przy użyciu której sprawdzamy kolor cukierka.
+    \item Pozycja cukierka w płaszczyźnie w poprzek ruchu taśmy się nie zmieniła. Została wykorzystana funkcja \verb|is_candy_tracked|.
 \end{enumerate}
 Jeśli kolejno wszystkie wymagania zostały spełnione, ilość rozpoznanego rodzaju cukierka jest zwiększona.
 
@@ -205,9 +205,9 @@ W tym przypadku metoda nie osiągnęła 100\% w żadnym z obserwowanych kolorów
 \section{Wnioski}
 \label{Wnioski}
 
-Uzyskane wyniki były zgodne z założeniami projektu. Skuteczność metody, na podstawie omówionych przypadków, wyniosła średnio 94\%.
+Projekt skoncentrował się na opracowaniu metody klasyfikacji cukierków na podstawie koloru ich opakowań. Metoda klasyfikacji osiągneła średnią skuteczność 94\%. System skutecznie identyfikuje cukierki na taśmie produkcyjnej, co może być użyteczne w branży spożywczej do zliczania ilości cukierków w partii oraz weryfikacji ich różnorodności.
 
-Rozwiązanie to może znaleźć zastosowanie w branży spożywczej zarówno do zliczania ilości cukierków, jak i do weryfikacji p
+Perspektywy rozwoju obejmują dalsze doskonalenie algorytmu klasyfikacji, zwłaszcza w przypadku sytuacji, gdy cukierki tego samego koloru są blisko siebie. Dodatkowo, można rozważyć rozszerzenie rozwiązania na inne produkty spożywcze o podobnych wymiarach, co zwiększyłoby zakres jego zastosowania.
 
 \section{Literatura}
 \label{Literatura}

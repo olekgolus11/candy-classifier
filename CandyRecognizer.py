@@ -54,7 +54,7 @@ class CandyRecognizer:
     def detect_and_draw_contours(self, output_image, mask, color_name):
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for contour in contours:
-            if cv2.contourArea(contour) > C.MIN_CONTOUR_AREA:
+            if self.is_area_in_range(contour):
                 x, y, width, height = cv2.boundingRect(contour)
                 tracked_candies_y_for_this_color = self.tracked_candies_y[color_name]
                 tracked_candies_y_for_this_color_ranges = self.convert_to_ranges(tracked_candies_y_for_this_color, C.Y_THRESHOLD)
@@ -69,6 +69,9 @@ class CandyRecognizer:
                                        tracked_candies_y_for_this_color_ranges)
 
                 self.draw_detected_candy_border(output_image, color_name, x, y, width, height)
+
+    def is_area_in_range(self, contour):
+        return cv2.contourArea(contour) > C.MIN_CONTOUR_AREA
 
     def convert_to_ranges(self, values, threshold):
         return [range(value - threshold, value + threshold) for value in values]
