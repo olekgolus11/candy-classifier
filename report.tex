@@ -172,9 +172,11 @@ Analizując rezultaty otrzymaliśmy następujące wyniki:
 
 Metoda w przypadku 1. daje wyniki 100-tu procentowej zgodności między rzeczywistą ilością cukierków, a tą rozpoznaną przez program, dla danego koloru opakowania cukierka. Metoda poprawnie identyfikuje typy cukierków również w sytuacji, gdy dwa cukierki innych typów znajdują się jeden pod drugim.
 
-\begin{center}
-\includegraphics[width=6cm]{badanie.png}
-\end{center}
+\begin{figure}
+    \centering
+    \includegraphics[width=6cm]{badanie.png}
+    \caption{Przypadek 1, w którym dwa różne typy cukierków stykają się ze sobą}
+\end{figure}
 
 \subsection{Przypadek 2}
 
@@ -192,9 +194,12 @@ W przypadku 2. analizowane były wyłącznie cukierki marki Mamba.
 W tym przypadku metoda nie osiągnęła 100\% w żadnym z obserwowanych kolorów. Niedokładność ta wynikała z tego samego powodu. Metoda klasyfikując typ cukierka ma problem z rozpoznaniem dwóch cukierków tego samego koloru opakowania znajdujących się bezpośrednio obok siebie (stykających się ze sobą). Problem ten w przypadku 1. nie wystąpił, stąd otrzymaliśmy początkowo idealną dokładność.
 
 \begin{center}
+\begin{figure}[H]
 \includegraphics[height=5cm]{pink.png}
 \includegraphics[height=5cm]{orange.png}
 \includegraphics[height=5cm]{red.png}
+\caption{Przypadek 2, w którym cukierki tych samych typów stykają się ze sobą}
+\end{figure}
 \end{center}
 
 \section{Wnioski}
