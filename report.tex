@@ -35,9 +35,9 @@
 
 \section{Wstęp}
 \label{Wstęp}
-W projekcie opracowano metodę, która pozwala na rozpoznawanie typów cukierków na podstawie ich kolorowych opakowań oraz monitorowanie ich ilości na taśmie produkcyjnej.
+W projekcie opracowano metodę, która pozwala rozpoznawać typy cukierków na podstawie ich kolorowych opakowań oraz monitorowanie ich ilości na taśmie produkcyjnej.
 
-Jednym z podobnych rozwiązań w tej branży (spożywczej) jest rozpoznawanie rodzajów bułek oraz ich kształtów tak jak zostało to przedstawione w \cite{virtuslab}, w przypadku tematu, jakim są cukierki, można znaleźć zastosowania w pomocy rozróżniania rodzaju cukierka w bombonierce \cite{chocolates}. Innym przypadkiem użycia detekcji obiektów na podstawie ich opakowania może być również innowacyjna metoda rozpoznawania produktów w automatach sprzedających \cite{vending}.
+Jednym z podobnych rozwiązań w tej branży (spożywczej) jest rozpoznawanie rodzajów bułek oraz ich kształtów tak jak zostało to przedstawione w artykule \cite{virtuslab}. W przypadku tematu, jakim są cukierki, można znaleźć zastosowania w pomocy rozróżniania rodzaju cukierka w bombonierce \cite{chocolates}. Innym przypadkiem użycia detekcji obiektów na podstawie ich opakowania może być również innowacyjna metoda rozpoznawania produktów w automatach sprzedających \cite{vending}.
 
 Metoda, którą opracowano w tym projekcie, może znaleźć zastosowanie w przemyśle spożywczym w automatyzacji procesów pakowania oraz kontroli jakości. Zapewnia ona selekcję produktów oraz może przyczynić się do usprawnienia procesów magazynowania i dystrybucji.
 
@@ -171,54 +171,47 @@ Metoda, przedstawiona na ryusnku \ref{fig:diagramMetody}, by zidentyfikować i z
 
 \section{Wyniki i dyskusja}
 \label{Wyniki i dyskusja}
-Skuteczność działania metody została przetestowana na wcześniej przygotowanych nagraniach taśmy produkcyjnej z umieszczonymi na niej cukierkami z których wyodrębniono przypadki.
-\subsection{Przypadek 1}
+Skuteczność działania metody została przetestowana na wcześniej przygotowanym nagraniu taśmy produkcyjnej z umieszczonymi na niej cukierkami. Nagranie przedstawia przykładowe działanie metody.
+\subsection{Wyniki}
 Analizując rezultaty otrzymaliśmy następujące wyniki:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{wykres1.png}
-    \caption{Wykres rezultatów dla pierwszego przypadku}
-    \label{fig:przypadek1}
+    \includegraphics[width=\linewidth]{wykresSkutecznosci}
+    \caption{Wykres rezultatów dla przykładowego działania metody}
+    \label{fig:wykresSkutecznosci}
 \end{figure}
 
+Analizując rysunek \ref{fig:wykresSkutecznosci} można zauważyć, że metoda klasyfikacji cukierków nie zliczyłą wszystkich cukierków, które zostały umieszczone na taśmie.
 
-Metoda w przypadku 1. daje wyniki 100-tu procentowej zgodności między rzeczywistą ilością cukierków, a tą rozpoznaną przez program, dla danego koloru opakowania cukierka. Metoda poprawnie identyfikuje typy cukierków również w sytuacji, gdy dwa cukierki innych typów znajdują się jeden pod drugim.
+W celu zbadania przyczyny tego zjawiska, przeanalizowaliśmy dokładnie nagranie, na którym została uruchomiona metoda. W wyniku analizy, zauważyliśmy, że metoda nie zliczyła poprawnie cukierków o tym samym kolorze opakowania, które znajdowały się bezpośrednio obok siebie - w tym wypadku, metoda zliczyła jeden cukierek, a drugi pominęła.
+
+\subsection{Przykład opisanego błędu}
+\label{Przykład opisanego błędu}
+W celu potwierdzenia przyczyny błędu, przeprowadziliśmy dodatkowy test, który polegał na umieszczeniu na taśmie dwóch cukierków tego samego koloru obok siebie. Wykorzystaliśmy do tego trzy pary cukierków, czerwonych, różowych oraz pomarańczowych. Rysunek \ref{fig:wykresBledu} przedstawia wyniki testu.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=6cm]{badanie.png}
-    \caption{Przypadek pierwszy, w którym dwa różne typy cukierków stykają się ze sobą}
+    \label{fig:wykresBledu}
+    \includegraphics[width=6cm]{wykresBledu}
+    \caption{Wyniki testu potwierdzającego przyczynę błędu}
 \end{figure}
 
-\subsection{Przypadek 2}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\linewidth]{wykres2.png}
-    \caption{Wykres rezultatów dla drugiego przypadku}
-    \label{fig:przypadek2}
-\end{figure}
-
-
-W przypadku 2. analizowane były wyłącznie cukierki marki Mamba.
-
-
-W tym przypadku metoda nie osiągnęła 100\% w żadnym z obserwowanych kolorów. Niedokładność ta wynikała z tego samego powodu. Metoda klasyfikując typ cukierka ma problem z rozpoznaniem dwóch cukierków tego samego koloru opakowania znajdujących się bezpośrednio obok siebie (stykających się ze sobą). Problem ten w przypadku 1. nie wystąpił, stąd otrzymaliśmy początkowo idealną dokładność.
+Analizując rysunek \ref{fig:wykresBledu} można zauważyć, że metoda zliczyła poprawnie tylko jeden cukierek z każdej pary, co potwierdza naszą hipotezę, że metoda nie zliczy cukierków tego samego koloru, które znajdują się bezpośrednio obok siebie.
 
 \begin{center}
 \begin{figure}[H]
 \includegraphics[height=5cm]{pink.png}
 \includegraphics[height=5cm]{orange.png}
 \includegraphics[height=5cm]{red.png}
-\caption{Przypadek drugi, w którym cukierki tych samych typów stykają się ze sobą}
+\caption{Przypadek błędu metody, w którym para cukierków tego samego typu jest traktowana jako jeden cukierek}
 \end{figure}
 \end{center}
 
 \section{Wnioski}
 \label{Wnioski}
 
-Projekt skoncentrował się na opracowaniu metody klasyfikacji cukierków na podstawie koloru ich opakowań. Metoda klasyfikacji osiągneła średnią skuteczność 94\%. System skutecznie identyfikuje cukierki na taśmie produkcyjnej, co może być użyteczne w branży spożywczej do zliczania ilości cukierków w partii oraz weryfikacji ich różnorodności.
+Projekt skoncentrował się na opracowaniu metody klasyfikacji cukierków na podstawie koloru ich opakowań. Metoda klasyfikacji osiągneła średnią skuteczność 96\% dla analizowanego nagrania przykładowego użycia. Skuteczność na tym poziomie może być wystarczająca dla takich przypadków użycia, w których stu procentowa precyzja nie jest wymagana. Jednym z takich przypadków może być weryfikacja różnorodności cukierków na taśmie produkcyjnej, gdzie nie jest wymagane zliczenie dokładnej ilości cukierków danego typu, a jedynie sprawdzenie, czy cukierki są wystarczająco zróżnicowane przyjmując pewien próg różnorodności.
 
 Perspektywy rozwoju obejmują dalsze doskonalenie algorytmu klasyfikacji, zwłaszcza w przypadku sytuacji, gdy cukierki tego samego koloru są blisko siebie. Dodatkowo, można rozważyć rozszerzenie rozwiązania na inne produkty spożywcze o podobnych wymiarach, co zwiększyłoby zakres jego zastosowania.
 
