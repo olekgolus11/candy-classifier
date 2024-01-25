@@ -182,13 +182,13 @@ Analizując rezultaty otrzymaliśmy następujące wyniki:
     \label{fig:wykresSkutecznosci}
 \end{figure}
 
-Analizując rysunek \ref{fig:wykresSkutecznosci} można zauważyć, że metoda klasyfikacji cukierków nie zliczyłą wszystkich cukierków, które zostały umieszczone na taśmie.
+Analizując rysunek \ref{fig:wykresSkutecznosci} można zauważyć, że metoda klasyfikacji cukierków nie zliczyła wszystkich cukierków, które zostały umieszczone na taśmie.
 
 W celu zbadania przyczyny tego zjawiska, przeanalizowaliśmy dokładnie nagranie, na którym została uruchomiona metoda. W wyniku analizy, zauważyliśmy, że metoda nie zliczyła poprawnie cukierków o tym samym kolorze opakowania, które znajdowały się bezpośrednio obok siebie - w tym wypadku, metoda zliczyła jeden cukierek, a drugi pominęła.
 
 \subsection{Przykład opisanego błędu}
 \label{Przykład opisanego błędu}
-W celu potwierdzenia przyczyny błędu, przeprowadziliśmy dodatkowy test, który polegał na umieszczeniu na taśmie dwóch cukierków tego samego koloru obok siebie. Wykorzystaliśmy do tego trzy pary cukierków, czerwonych, różowych oraz pomarańczowych. Rysunek \ref{fig:wykresBledu} przedstawia wyniki testu.
+W celu potwierdzenia przyczyny błędu, przeprowadziliśmy dodatkowy test, który polegał na umieszczeniu na taśmie dwóch cukierków tego samego koloru opakowania obok siebie. Wykorzystaliśmy do tego trzy pary cukierków, czerwonych, różowych oraz pomarańczowych. Rysunek \ref{fig:wykresBledu} przedstawia wyniki testu.
 
 \begin{figure}[H]
     \centering
@@ -197,7 +197,7 @@ W celu potwierdzenia przyczyny błędu, przeprowadziliśmy dodatkowy test, któr
     \caption{Wyniki testu potwierdzającego przyczynę błędu}
 \end{figure}
 
-Analizując rysunek \ref{fig:wykresBledu} można zauważyć, że metoda zliczyła poprawnie tylko jeden cukierek z każdej pary, co potwierdza naszą hipotezę, że metoda nie zliczy cukierków tego samego koloru, które znajdują się bezpośrednio obok siebie.
+Analizując rysunek \ref{fig:wykresBledu} można zauważyć, że metoda zliczyła poprawnie tylko jeden cukierek z każdej pary, co potwierdza naszą hipotezę, że metoda nie zliczy cukierków o tym samym kolorze opakowania, które znajdują się bezpośrednio obok siebie.
 
 \begin{center}
 \begin{figure}[H]
@@ -213,7 +213,7 @@ Analizując rysunek \ref{fig:wykresBledu} można zauważyć, że metoda zliczył
 
 Projekt skoncentrował się na opracowaniu metody klasyfikacji cukierków na podstawie koloru ich opakowań. Metoda klasyfikacji osiągneła średnią skuteczność 96\% dla analizowanego nagrania przykładowego użycia. Skuteczność na tym poziomie może być wystarczająca dla takich przypadków użycia, w których stu procentowa precyzja nie jest wymagana. Jednym z takich przypadków może być weryfikacja różnorodności cukierków na taśmie produkcyjnej, gdzie nie jest wymagane zliczenie dokładnej ilości cukierków danego typu, a jedynie sprawdzenie, czy cukierki są wystarczająco zróżnicowane przyjmując pewien próg różnorodności.
 
-Perspektywy rozwoju obejmują dalsze doskonalenie algorytmu klasyfikacji, zwłaszcza w przypadku sytuacji, gdy cukierki tego samego koloru są blisko siebie. Dodatkowo, można rozważyć rozszerzenie rozwiązania na inne produkty spożywcze o podobnych wymiarach, co zwiększyłoby zakres jego zastosowania.
+Perspektywy rozwoju obejmują dalsze doskonalenie algorytmu klasyfikacji, zwłaszcza w przypadku sytuacji, gdy cukierki tego samego koloru opakowania są blisko siebie. Dodatkowo, można rozważyć rozszerzenie rozwiązania na inne produkty spożywcze o podobnych wymiarach, co zwiększyłoby zakres jego zastosowania.
 
 \section{Literatura}
 \label{Literatura}
