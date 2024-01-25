@@ -35,9 +35,11 @@
 
 \section{Wstęp}
 \label{Wstęp}
-W projekcie opracowano metodę, która pozwala na rozpoznawanie kolorowych opakowań cukierków oraz monitorowanie ich ilości na taśmie produkcyjnej. Metoda ta może znaleźć zastosowanie w przemyśle spożywczym w automatyzacji procesów pakowania oraz kontroli jakości. Zapewnia ona selekcję produktów oraz może przyczynić się do usprawnienia procesów magazynowania i dystrybucji.
+W projekcie opracowano metodę, która pozwala na rozpoznawanie typów cukierków na podstawie ich kolorowych opakowań oraz monitorowanie ich ilości na taśmie produkcyjnej.
 
-Jednym z podobnych rozwiązań z tej branży (spożywczej) jest rozpoznawanie rodzajów bułek oraz ich kształtów tak jak zostało to przedstawione w \cite{virtuslab}, w przypadku tematu, jakim są cukierki, można znaleźć zastosowania w pomocy rozróżniania rodzaju cukierka w bombonierce \cite{chocolates}. Innym przypadkiem użycia detekcji obiektów na podstawie ich opakowania może być również przedstawiona tutaj \cite{vending} innowacyjna metoda rozpoznawania produktów w automatach sprzedających.
+Jednym z podobnych rozwiązań w tej branży (spożywczej) jest rozpoznawanie rodzajów bułek oraz ich kształtów tak jak zostało to przedstawione w \cite{virtuslab}, w przypadku tematu, jakim są cukierki, można znaleźć zastosowania w pomocy rozróżniania rodzaju cukierka w bombonierce \cite{chocolates}. Innym przypadkiem użycia detekcji obiektów na podstawie ich opakowania może być również innowacyjna metoda rozpoznawania produktów w automatach sprzedających \cite{vending}.
+
+Metoda, którą opracowano w tym projekcie, może znaleźć zastosowanie w przemyśle spożywczym w automatyzacji procesów pakowania oraz kontroli jakości. Zapewnia ona selekcję produktów oraz może przyczynić się do usprawnienia procesów magazynowania i dystrybucji.
 
 \section{Materiały i metody}
 \label{Materiały i metody}
@@ -117,23 +119,18 @@ Kolory cukierków w określonym oświetleniu, omówionym w sekcji \ref{Układ po
     \label{fig:ukladPomiarowy}
 \end{figure}
 
-Układ pomiarowy, przedstawiony na rysunku \ref{fig:ukladPomiarowy}, składa się z ciemnozielonej taśmy produkcyjnej napędzanej silnikiem elektrycznym o stałej prędkości, kamery o rozdzielczości 1080p oraz lampy LED naświetlającej taśmę z góry. Ciemnozielony kolor taśmy został wybrany tak, aby nie zawierał się w przedziałach barw cukierków podanych w \ref{tab:tab1}.
+Układ pomiarowy, przedstawiony na rysunku \ref{fig:ukladPomiarowy}, składa się z ciemnozielonej taśmy produkcyjnej napędzanej silnikiem elektrycznym o stałej prędkości, kamery o rozdzielczości 1920x1080 pikseli nagrywającej w 30 klatkach na sekundę oraz lampy LED naświetlającej taśmę z góry. Ciemnozielony kolor taśmy został wybrany tak, aby nie zawierał się w przedziałach barw cukierków podanych w \ref{tab:tab1}.
 
-Taśma produkcyjna ma szerokość 6cm, która przesuwa umieszczone na niej cukierki ze stałą prędkością 3cm/s. Do oświetlenia cukierków znajdujących się na taśmie została użyta lampa ledowa o mocy 10W i temperaturze 3500K, umieszczona na wysokości 20cm, oddalona od kamery o 15cm w płaszczyźnie poziomej. Kamera została ustawiona 20cm nad taśmą, rejestrując przy tym całą szerokość taśmy.
+Taśma produkcyjna, o szerokości 6cm, przesuwa umieszczone na niej cukierki ze stałą prędkością 3cm/s. Do oświetlenia cukierków znajdujących się na taśmie została użyta lampa ledowa o mocy 10W i temperaturze 3500K, umieszczona na wysokości 20cm, oddalona od kamery o 15cm w płaszczyźnie poziomej. Kamera została ustawiona 20cm nad taśmą, rejestrując przy tym całą szerokość taśmy.
+
+Układ pomiarowy składa się również z obszaru detekcji, czyli miejsca, w którym zliczane są typy cukierków. Posiada on wymiary 3mm x 6cm. Jego szerokość jest równa szerokości taśmy, natomiast długość, która wyliczona na podstawie prędkości taśmy oraz ilości klatek na sekundę z jaką nagrywany jest obraz, ma na celu zapewnić, że dany cukierek przynajmniej raz znajdzie się w obszarze detekcji, możliwie jak najbardziej ograniczając ilość występowania dokładnie tego samego cukierka w tym obszarze.
 
 \subsection{Metoda pomiarowa}
 \label{Metoda pomiarowa}
 \subsubsection{Idea}
 \label{Idea}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[height=8cm]{diagramIdei.png}
-    \caption{Diagram idei metody pomiarowej}
-    \label{fig:diagramIdei}
-\end{figure}
-
-Ideą metody pomiarowej, przedstawionej na diagramie \ref{fig:diagramIdei}, jest zliczanie cukierków umieszczonych na taśmie produkcyjnej bazując na kolorze opakowania cukierka. Przypadki użycia metody pomiarowej to między innymi:
+Ideą metody pomiarowej, jest zliczanie cukierków umieszczonych na taśmie produkcyjnej bazując na kolorze opakowania cukierka. Przypadki użycia metody pomiarowej to między innymi:
 
 \begin{itemize}
     \item Weryfikacja ilości cukierków w partii - czy ilość zliczonych cukierków jest zgodna z ustaloną ilością w danej partii.
@@ -150,13 +147,27 @@ Ideą metody pomiarowej, przedstawionej na diagramie \ref{fig:diagramIdei}, jest
     \label{fig:diagramMetody}
 \end{figure}
 
-Metoda, przedstawiona na diagramie \ref{fig:diagramMetody}, by zidentyfikować i zliczyć typ danego cukierka, musi spełnić następujące wymagania:
+Metoda, przedstawiona na ryusnku \ref{fig:diagramMetody}, by zidentyfikować i zliczyć typ danego cukierka wykonuje następujące kroki:
 \begin{enumerate}
-    \item Pole powierzchni identyfikowanego cukierka jest większe niż minimalne założone pole. Wykorzystana została funkcja \verb|is_area_in_range|, która używa pojedynczej klatki nagrania.
-    \item Kolor opakowania zawiera się w określonych w \ref{tab:tab1} przedziałach. Użyta została funkcja \verb|create_color_mask|, która przyjmuje klatkę obrazu i zwraca maskę, przy użyciu której sprawdzamy kolor cukierka.
-    \item Pozycja cukierka w płaszczyźnie w poprzek ruchu taśmy się nie zmieniła. Została wykorzystana funkcja \verb|is_candy_tracked|.
+    \item Sprawdzany zostaje kolor opakowania cukierka, który musi zawierać się w jednym z określonych w tabeli \ref{tab:tab1} przedziałach. By to określić:
+    \begin{itemize}
+        \item Dla każdego z 4 przedziałów barw, tworzona jest maska.
+        \item Do utworzenia masek wykorzystana zostaje funkcja \verb|cv2.inRange()|\cite{inRange}, przyjmująca jako argumenty: klatkę aktualnie analizowanego obrazu w przestrzeni barw HSV, dolną oraz górną granicę danego przedziału barw.
+        \item Zwrócone zostają łącznie 4 maski, po jednej dla każdego przedziału barw. \textbf{Wszystkie kolejne kroki są wykonywane dla każdej z 4 otrzymanych masek osobno}.
+    \end{itemize}
+    \item Sprawdzane jest pole powierzchni identyfikowanego cukierka, które musi być większe niż minimalne założone pole (30000px):
+    \begin{itemize}
+        \item Na każdej z otrzymanych masek wyznaczamy kontury znalezionych obiektów.
+        \item Do znalezienia konturów wykorzystana zostaje funkcja \verb|cv2.findContours()|\cite{findContours}, przyjmująca jako argumenty: obraz binarny (jedna z 4 wcześniej otrzymanych masek), tryb konturów (użyliśmy \verb|RETR_EXTERNAL|, który zwraca nam tylko zewnętrzne kontury, pomijane są wszystkie zagnieżdżone wewnętrzne kontury) oraz metoda aproksymacji konturów (skorzystaliśmy z \verb|CHAIN_APPROX_SIMPLE|, która kompresuje informacje o konturze do 4 punktów wyznaczających rogi konturu, co jest dla nas wystarczającą informacją).
+        \item Dla wszystkich otrzymanych konturów, obliczane jest zaznaczone przez nie pole powierzchni. Te obiekty, których pole powierzchni jest większe niż minimalne założone pole, są wykorzystywane w kolejnym kroku.
+    \end{itemize}
+    \item Sprawdzana jest pozycja konturu cukierka. Do analizy pozycji konturów wszystkich cukierków wykorzystaliśmy listę obserwowanych konturów, która jest aktualizowana w każdej klatce:
+    \begin{itemize}
+        \item Dla każdego konturu sprawdzana jest jego pozycja (środek ciężkości) na obrazie.
+        \item Jeżeli w liście obserwowanych konturów istnieje kontur, którego pozycja, względem aktualnie analizowanego konturu, w poprzek ruchu taśmy nie zmieniła się (z dokładnością do 40px), to pozycja tego konturu zostaje zaktualizowana. Jeżeli nie istnieje taki kontur, to aktualnie analizowany kontur zostaje dodany do listy obserwowanych konturów.
+        \item Jeżeli aktualnie analizowany kontur znajduje się w obszarze detekcji, to ilość rozpoznanego rodzaju cukierka jest zwiększana, a sam kontur otrzymuje flagę, że został już rozpoznany.
+    \end{itemize}
 \end{enumerate}
-Jeśli kolejno wszystkie wymagania zostały spełnione, ilość rozpoznanego rodzaju cukierka jest zwiększona.
 
 \section{Wyniki i dyskusja}
 \label{Wyniki i dyskusja}
@@ -235,6 +246,12 @@ Perspektywy rozwoju obejmują dalsze doskonalenie algorytmu klasyfikacji, zwłas
 
 \bibitem{vending}
  \url{https://www.researchgate.net/publication/337068624_Towards_Identification_of_Packaged_Products_via_Computer_Vision_Convolutional_Neural_Networks_for_Object_Detection_and_Image_Classification_in_Retail_Environments}
+
+\bibitem{inRange}
+\url{https://docs.opencv.org/3.4/d2/de8/group__core__array.html#ga48af0ab51e36436c5d04340e036ce981}
+
+\bibitem{findContours}
+\url{https://docs.opencv.org/3.4/d3/dc0/group__imgproc__shape.html#ga17ed9f5d79ae97bd4c7cf18403e1689a}
 
 \end{thebibliography}
 

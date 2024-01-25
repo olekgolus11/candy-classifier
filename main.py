@@ -1,6 +1,6 @@
 from CandyRecognizer import CandyRecognizer
 
-video_path = 'videos/video1.mp4'
+video_path = 'videos/video2.mp4'
 candy_recognizer = CandyRecognizer(video_path)
 
 try:
