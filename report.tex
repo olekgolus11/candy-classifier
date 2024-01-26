@@ -35,9 +35,11 @@
 
 \section{Wstęp}
 \label{Wstęp}
-W projekcie opracowano metodę, która pozwala rozpoznawać typy cukierków na podstawie ich kolorowych opakowań oraz monitorowanie ich ilości na taśmie produkcyjnej.
+W projekcie opracowano metodę, która pozwala rozpoznawać typy cukierków na podstawie ich kolorowych opakowań oraz monitorować ich ilości na taśmie produkcyjnej.
 
 Jednym z podobnych rozwiązań w tej branży (spożywczej) jest rozpoznawanie rodzajów bułek oraz ich kształtów tak jak zostało to przedstawione w artykule \cite{virtuslab}. W przypadku tematu, jakim są cukierki, można znaleźć zastosowania w pomocy rozróżniania rodzaju cukierka w bombonierce \cite{chocolates}. Innym przypadkiem użycia detekcji obiektów na podstawie ich opakowania może być również innowacyjna metoda rozpoznawania produktów w automatach sprzedających \cite{vending}.
+
+Metody detekcji obiektów znajdują również zastosowania w detekcji obiektów przenoszonych przenośnikami taśmowymi. Przykładowo, w artykule \cite{coalForeign} przedstawiono metodę detekcji obcych obiektów wystepujących na przenośniku taśmowym w kopalni węgla.
 
 Metoda, którą opracowano w tym projekcie, może znaleźć zastosowanie w przemyśle spożywczym w automatyzacji procesów pakowania oraz kontroli jakości. Zapewnia ona selekcję produktów oraz może przyczynić się do usprawnienia procesów magazynowania i dystrybucji.
 
@@ -45,7 +47,7 @@ Metoda, którą opracowano w tym projekcie, może znaleźć zastosowanie w przem
 \label{Materiały i metody}
 \subsection{Materiały badawcze}
 \label{Materiały badawcze}
-Materiałami badawczymi są konkretne rodzaje cukierków o kolorowych opakowaniach, to znaczy - cukierki marki Mamba oraz Turbo. Zostały one wybrane ze względu na to, że posiadają bardzo podobny rozmiar.
+Materiałami badawczymi są konkretne rodzaje cukierków o kolorowych opakowaniach - cukierki marki Mamba oraz Turbo. Zostały one wybrane ze względu na to, że posiadają bardzo podobny rozmiar.
 
 Wykorzystane cukierki dzielimy na 4 typy kolorów, z czego różowy, czerwony oraz pomarańczowy to cukierki marki Mamba, natomiast zielony - marki Turbo. Cukierki marki Mamba posiadają dwie barwy danego koloru - barwę jaśniejszą oraz ciemniejszą.
 
@@ -80,10 +82,6 @@ Wykorzystane cukierki dzielimy na 4 typy kolorów, z czego różowy, czerwony or
     \end{tcolorbox}
     \caption{Wizualizacja barw dla każdego koloru badanego cukierka}
 \end{figure}
-
-
-
-
 
 
 \subsection{Przedziały kolorów rozpoznawalnych cukierków}
@@ -224,6 +222,9 @@ Perspektywy rozwoju obejmują dalsze doskonalenie algorytmu klasyfikacji, zwłas
 
 \bibitem{gfg}
 \url{https://www.geeksforgeeks.org/detect-an-object-with-opencv-python/}
+
+\bibitem{coalForeign}
+\url{https://www.mdpi.com/2227-7080/11/5/114}
 
 \bibitem{dry}
 \url{https://dontrepeatyourself.org/post/color-based-object-detection-with-opencv-and-python/}
