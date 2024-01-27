@@ -60,7 +60,7 @@ Wykorzystane cukierki dzielimy na 4 typy kolorów, z czego różowy, czerwony or
 
 \subsection{Przedziały kolorów rozpoznawalnych cukierków}
 
-Kolory cukierków w określonym oświetleniu, omówionym w sekcji \ref{Układ pomiarowy}, powinny zawierać się w następujących zakresach:
+Kolory cukierków w określonym oświetleniu, omówionym w sekcji \ref{Układ pomiarowy}, powinny zawierać się w następujących zakresach, by zostaly poprawnie zidentyfikowane:
 
 \begin{table}[H]
     \label{tab:tab1}
@@ -123,20 +123,20 @@ Metoda, przedstawiona na ryusnku \ref{fig:diagramMetody}, by zidentyfikować i z
 \begin{enumerate}
     \item Sprawdzany zostaje kolor opakowania cukierka, który musi zawierać się w jednym z określonych w tabeli \ref{tab:tab1} przedziałach. By to określić:
     \begin{itemize}
-        \item Dla każdego z 4 przedziałów barw, tworzona jest maska.
+        \item Dla każdego z 4 przedziałów barw, tworzona jest maska, na której cukierki badanego koloru są reprezentowane jako białe obszary, a tło jako czarne.
         \item Do utworzenia masek wykorzystana zostaje funkcja \verb|cv2.inRange()|\cite{inRange}, przyjmująca jako argumenty: klatkę aktualnie analizowanego obrazu w przestrzeni barw HSV, dolną oraz górną granicę danego przedziału barw.
         \item Zwrócone zostają łącznie 4 maski, po jednej dla każdego przedziału barw. \textbf{Wszystkie kolejne kroki są wykonywane dla każdej z 4 otrzymanych masek osobno}.
     \end{itemize}
     \item Sprawdzane jest pole powierzchni identyfikowanego cukierka, które musi być większe niż minimalne założone pole (30000px):
     \begin{itemize}
         \item Na każdej z otrzymanych masek wyznaczamy kontury znalezionych obiektów.
-        \item Do znalezienia konturów wykorzystana zostaje funkcja \verb|cv2.findContours()|\cite{findContours}, przyjmująca jako argumenty: obraz binarny (jedna z 4 wcześniej otrzymanych masek), tryb konturów (użyliśmy \verb|RETR_EXTERNAL|, który zwraca nam tylko zewnętrzne kontury, pomijane są wszystkie zagnieżdżone wewnętrzne kontury) oraz metoda aproksymacji konturów (skorzystaliśmy z \verb|CHAIN_APPROX_SIMPLE|, która kompresuje informacje o konturze do 4 punktów wyznaczających rogi konturu, co jest dla nas wystarczającą informacją).
+        \item Do znalezienia konturów wykorzystana zostaje funkcja \verb|cv2.findContours()|\cite{findContours}, przyjmująca jako argumenty: obraz binarny (jedna z 4 wcześniej otrzymanych masek), tryb konturów (użyliśmy \verb|RETR_EXTERNAL|\cite{retrExternal}, który zwraca nam tylko zewnętrzne kontury, a wszystkie zagnieżdżone wewnętrzne kontury są pomijane) oraz metoda aproksymacji konturów (skorzystaliśmy z \verb|CHAIN_APPROX_SIMPLE|\cite{chainApproxSimble}, która kompresuje informacje o konturze do 4 punktów wyznaczających rogi konturu, co jest dla nas wystarczającą informacją).
         \item Dla wszystkich otrzymanych konturów, obliczane jest zaznaczone przez nie pole powierzchni. Te obiekty, których pole powierzchni jest większe niż minimalne założone pole, są wykorzystywane w kolejnym kroku.
     \end{itemize}
     \item Sprawdzana jest pozycja konturu cukierka. Do analizy pozycji konturów wszystkich cukierków wykorzystaliśmy listę obserwowanych konturów, która jest aktualizowana w każdej klatce:
     \begin{itemize}
         \item Dla każdego konturu sprawdzana jest jego pozycja (środek ciężkości) na obrazie.
-        \item Jeżeli w liście obserwowanych konturów istnieje kontur, którego pozycja, względem aktualnie analizowanego konturu, w poprzek ruchu taśmy nie zmieniła się (z dokładnością do 40px), to pozycja tego konturu zostaje zaktualizowana. Jeżeli nie istnieje taki kontur, to aktualnie analizowany kontur zostaje dodany do listy obserwowanych konturów.
+        \item Jeżeli w liście obserwowanych konturów istnieje kontur, którego pozycja, względem aktualnie analizowanego konturu, wzdłuż i w poprzek ruchu taśmy nie zmieniła się (z dokładnością do 40px), to kontur z listy zostaje zidentyfikowany jako ten aktualnie analizowany, a jego pozycja zostaje zaktualizowana. Jeżeli nie istnieje taki kontur, to aktualnie analizowany kontur zostaje dodany do listy obserwowanych konturów.
         \item Jeżeli aktualnie analizowany kontur znajduje się w obszarze detekcji, to ilość rozpoznanego rodzaju cukierka jest zwiększana, a sam kontur otrzymuje flagę, że został już rozpoznany.
     \end{itemize}
 \end{enumerate}
@@ -220,6 +220,12 @@ Perspektywy rozwoju obejmują dalsze doskonalenie algorytmu klasyfikacji, zwłas
 
 \bibitem{findContours}
 \url{https://docs.opencv.org/3.4/d3/dc0/group__imgproc__shape.html#ga17ed9f5d79ae97bd4c7cf18403e1689a}
+
+\bibitem{retrExternal}
+\url{https://docs.opencv.org/4.x/d3/dc0/group__imgproc__shape.html#gga819779b9857cc2f8601e6526a3a5bc71aa7adc6d6608609fd84650f71b954b981}
+
+\bibitem{chainApproxSimble}
+\url{https://docs.opencv.org/4.x/d3/dc0/group__imgproc__shape.html#gga4303f45752694956374734a03c54d5ffa5f2883048e654999209f88ba04c302f5}
 
 \end{thebibliography}
 
