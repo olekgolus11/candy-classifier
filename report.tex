@@ -39,7 +39,7 @@ W projekcie opracowano metodę, która pozwala rozpoznawać typy cukierków na p
 
 Jednym z podobnych rozwiązań w tej branży (spożywczej) jest rozpoznawanie rodzajów bułek oraz ich kształtów tak jak zostało to przedstawione w artykule \cite{virtuslab}. W przypadku tematu, jakim są cukierki, można znaleźć zastosowania w pomocy rozróżniania rodzaju cukierka w bombonierce \cite{chocolates}. Innym przypadkiem użycia detekcji obiektów na podstawie ich opakowania może być również innowacyjna metoda rozpoznawania produktów w automatach sprzedających \cite{vending}.
 
-Metody detekcji obiektów znajdują również zastosowania w detekcji obiektów przenoszonych przenośnikami taśmowymi. Przykładowo, w artykule \cite{coalForeign} przedstawiono metodę detekcji obcych obiektów wystepujących na przenośniku taśmowym w kopalni węgla.
+Podobne metody znajdują również zastosowania w detekcji obiektów przenoszonych przenośnikami taśmowymi. Przykładowo, w artykule \cite{coalForeign} przedstawiono metodę detekcji obcych obiektów wystepujących na przenośniku taśmowym w kopalni węgla.
 
 Metoda, którą opracowano w tym projekcie, może znaleźć zastosowanie w przemyśle spożywczym w automatyzacji procesów pakowania oraz kontroli jakości. Zapewnia ona selekcję produktów oraz może przyczynić się do usprawnienia procesów magazynowania i dystrybucji.
 
@@ -95,14 +95,14 @@ Układ pomiarowy, przedstawiony na rysunku \ref{fig:ukladPomiarowy}, składa si�
 
 Taśma produkcyjna, o szerokości 6cm, przesuwa umieszczone na niej cukierki ze stałą prędkością 3cm/s. Do oświetlenia cukierków znajdujących się na taśmie została użyta lampa ledowa o mocy 10W i temperaturze 3500K, umieszczona na wysokości 20cm, oddalona od kamery o 15cm w płaszczyźnie poziomej. Kamera została ustawiona 20cm nad taśmą, rejestrując przy tym całą szerokość taśmy.
 
-Układ pomiarowy składa się również z obszaru detekcji, czyli miejsca, w którym zliczane są typy cukierków. Posiada on wymiary 3mm x 6cm. Jego szerokość jest równa szerokości taśmy, natomiast długość, która wyliczona na podstawie prędkości taśmy oraz ilości klatek na sekundę z jaką nagrywany jest obraz, ma na celu zapewnić, że dany cukierek przynajmniej raz znajdzie się w obszarze detekcji, możliwie jak najbardziej ograniczając ilość występowania dokładnie tego samego cukierka w tym obszarze.
+Układ pomiarowy składa się również z obszaru detekcji, czyli miejsca, w którym zliczane są typy cukierków. Posiada on wymiary 3mm x 6cm. Jego szerokość jest równa szerokości taśmy, natomiast długość została dobrana tak, aby każdy cukierek przynajmniej raz znalazł się w całości w obszarze detekcji.
 
 \subsection{Metoda pomiarowa}
 \label{Metoda pomiarowa}
 \subsubsection{Idea}
 \label{Idea}
 
-Ideą metody pomiarowej, jest zliczanie cukierków umieszczonych na taśmie produkcyjnej bazując na kolorze opakowania cukierka. Przypadki użycia metody pomiarowej to między innymi:
+Ideą metody pomiarowej jest zliczanie cukierków umieszczonych na taśmie produkcyjnej bazując na kolorze opakowania cukierka. Przypadki użycia metody pomiarowej to między innymi:
 
 \begin{itemize}
     \item Weryfikacja ilości cukierków w partii - czy ilość zliczonych cukierków jest zgodna z ustaloną ilością w danej partii.
@@ -129,9 +129,9 @@ Metoda, przedstawiona na ryusnku \ref{fig:diagramMetody}, by zidentyfikować i z
     \end{itemize}
     \item Sprawdzane jest pole powierzchni identyfikowanego cukierka, które musi być większe niż minimalne założone pole (30000px):
     \begin{itemize}
-        \item Na każdej z otrzymanych masek wyznaczamy kontury znalezionych obiektów.
-        \item Do znalezienia konturów wykorzystana zostaje funkcja \verb|cv2.findContours()|\cite{findContours}, przyjmująca jako argumenty: obraz binarny (jedna z 4 wcześniej otrzymanych masek), tryb konturów (użyliśmy \verb|RETR_EXTERNAL|\cite{retrExternal}, który zwraca nam tylko zewnętrzne kontury, a wszystkie zagnieżdżone wewnętrzne kontury są pomijane) oraz metoda aproksymacji konturów (skorzystaliśmy z \verb|CHAIN_APPROX_SIMPLE|\cite{chainApproxSimble}, która kompresuje informacje o konturze do 4 punktów wyznaczających rogi konturu, co jest dla nas wystarczającą informacją).
-        \item Dla wszystkich otrzymanych konturów, obliczane jest zaznaczone przez nie pole powierzchni. Te obiekty, których pole powierzchni jest większe niż minimalne założone pole, są wykorzystywane w kolejnym kroku.
+        \item Dla każdej z otrzymanych masek wyznaczamy kontury znalezionych obiektów.
+        \item Do znalezienia konturów wykorzystana zostaje funkcja \verb|cv2.findContours()|\cite{findContours}, przyjmująca jako argumenty: obraz binarny (jedna z 4 wcześniej otrzymanych masek), tryb konturów (użyliśmy \verb|RETR_EXTERNAL|\cite{retrExternal}, który zwraca nam tylko zewnętrzne kontury, a wszystkie zagnieżdżone wewnętrzne kontury są pomijane) oraz metoda aproksymacji konturów (skorzystaliśmy z \verb|CHAIN_APPROX_SIMPLE|\cite{chainApproxSimble}, która kompresuje informacje o konturze do 4 punktów wyznaczających narożniki konturu, co jest dla nas wystarczającą informacją).
+        \item Dla wszystkich otrzymanych konturów, obliczane jest zaznaczone przez nie pole powierzchni. Obiekty, których pole powierzchni jest większe niż minimalne założone pole, są wykorzystywane w kolejnym kroku.
     \end{itemize}
     \item Sprawdzana jest pozycja konturu cukierka. Do analizy pozycji konturów wszystkich cukierków wykorzystaliśmy listę obserwowanych konturów, która jest aktualizowana w każdej klatce:
     \begin{itemize}
@@ -156,7 +156,7 @@ Analizując rezultaty otrzymaliśmy następujące wyniki:
 
 Analizując rysunek \ref{fig:wykresSkutecznosci} można zauważyć, że metoda klasyfikacji cukierków nie zliczyła wszystkich cukierków, które zostały umieszczone na taśmie.
 
-W celu zbadania przyczyny tego zjawiska, przeanalizowaliśmy dokładnie nagranie, na którym została uruchomiona metoda. W wyniku analizy, zauważyliśmy, że metoda nie zliczyła poprawnie cukierków o tym samym kolorze opakowania, które znajdowały się bezpośrednio obok siebie - w tym wypadku, metoda zliczyła jeden cukierek, a drugi pominęła.
+W celu zbadania przyczyny tego zjawiska, przeanalizowaliśmy nagranie, na którym została uruchomiona metoda. W wyniku analizy, zauważyliśmy, że metoda nie zliczyła poprawnie cukierków o tym samym kolorze opakowania, które znajdowały się bezpośrednio obok siebie - w tym przypadku, metoda zliczyła jeden cukierek, a drugi pominęła.
 
 \subsection{Przykład opisanego błędu}
 \label{Przykład opisanego błędu}
@@ -164,9 +164,9 @@ W celu potwierdzenia przyczyny błędu, przeprowadziliśmy dodatkowy test, któr
 
 \begin{figure}[H]
     \centering
+    \label{fig:wykresBledu}
     \includegraphics{wykresBledu}
     \caption{Wyniki testu potwierdzającego przyczynę błędu}
-    \label{fig:wykresBledu}
 \end{figure}
 
 Analizując rysunek \ref{fig:wykresBledu} można zauważyć, że metoda zliczyła poprawnie tylko jeden cukierek z każdej pary, co potwierdza naszą hipotezę, że metoda nie zliczy cukierków o tym samym kolorze opakowania, które znajdują się bezpośrednio obok siebie.
@@ -183,7 +183,7 @@ Analizując rysunek \ref{fig:wykresBledu} można zauważyć, że metoda zliczył
 \section{Wnioski}
 \label{Wnioski}
 
-Projekt skoncentrował się na opracowaniu metody klasyfikacji cukierków na podstawie koloru ich opakowań. Metoda klasyfikacji osiągneła średnią skuteczność 96\% dla analizowanego nagrania przykładowego użycia. Skuteczność na tym poziomie może być wystarczająca dla takich przypadków użycia, w których stu procentowa precyzja nie jest wymagana. Jednym z takich przypadków może być weryfikacja różnorodności cukierków na taśmie produkcyjnej, gdzie nie jest wymagane zliczenie dokładnej ilości cukierków danego typu, a jedynie sprawdzenie, czy cukierki są wystarczająco zróżnicowane przyjmując pewien próg różnorodności.
+Projekt skoncentrował się na opracowaniu metody klasyfikacji cukierków na podstawie koloru ich opakowań. Metoda klasyfikacji osiągneła średnią skuteczność 96\% dla analizowanego nagrania przykładowego użycia. Skuteczność na tym poziomie może być wystarczająca dla takich przypadków użycia, w których stu procentowa precyzja nie jest wymagana. Jednym z przykładów może być weryfikacja różnorodności cukierków, gdzie nie jest wymagane zliczenie dokładnej ilości cukierków danego typu, a jedynie sprawdzenie, czy cukierki są wystarczająco zróżnicowane przyjmując pewien próg różnorodności.
 
 Perspektywy rozwoju obejmują dalsze doskonalenie algorytmu klasyfikacji, zwłaszcza w przypadku sytuacji, gdy cukierki tego samego koloru opakowania są blisko siebie. Dodatkowo, można rozważyć rozszerzenie rozwiązania na inne produkty spożywcze o podobnych wymiarach, co zwiększyłoby zakres jego zastosowania.
 
